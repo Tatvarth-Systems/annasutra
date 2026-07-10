@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 type Step = {
@@ -31,7 +32,7 @@ export function StepIndicator({ steps, currentKey }: StepIndicatorProps) {
                     : "bg-line text-muted",
               )}
             >
-              {index + 1}
+              {isDone ? <Check className="h-3.5 w-3.5" /> : index + 1}
             </span>
             <span
               className={cn(isCurrent ? "font-medium text-ink" : "text-muted")}

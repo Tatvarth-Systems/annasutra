@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AlertTriangle, Pencil, Plus, StickyNote, X } from "lucide-react";
 import type { CategoryId } from "@/data/categories";
 import { getItemsForCategory } from "@/data/catalog";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
@@ -189,18 +190,27 @@ export function AddItemRow({
         </Label>
         <Input
           id="item-note"
+          icon={StickyNote}
           value={note}
           onChange={(event) => setNote(event.target.value)}
         />
       </div>
 
       {isDuplicate ? (
-        <p className="mt-3 text-sm text-brand">{t("items.duplicateWarning")}</p>
+        <p className="mt-3 flex items-center gap-1.5 text-sm text-brand">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          {t("items.duplicateWarning")}
+        </p>
       ) : null}
       {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
 
       <div className="mt-4 flex gap-2">
         <Button type="button" onClick={handleSubmit}>
+          {editingItem ? (
+            <Pencil className="h-4 w-4" />
+          ) : (
+            <Plus className="h-4 w-4" />
+          )}
           {editingItem ? t("items.updateItem") : t("items.addItem")}
         </Button>
         {editingItem ? (
@@ -212,6 +222,7 @@ export function AddItemRow({
               onCancelEdit();
             }}
           >
+            <X className="h-4 w-4" />
             {t("items.cancelEdit")}
           </Button>
         ) : null}

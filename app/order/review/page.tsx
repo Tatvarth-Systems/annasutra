@@ -2,9 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  AlertCircle,
+  CalendarClock,
+  ClipboardCheck,
+  Download,
+  Loader2,
+  MapPin,
+  Pencil,
+  User,
+} from "lucide-react";
 import { useT } from "@/lib/i18n/provider";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
+import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { generateOrderPdf } from "@/lib/pdf/generateOrderPdf";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
@@ -28,6 +39,8 @@ export default function ReviewPage() {
   }, [client, categoryId, items, router]);
 
   if (!client || !categoryId || items.length === 0) return null;
+
+  const CategoryIcon = CATEGORY_ICONS[categoryId];
 
   async function handleDownload() {
     if (!client || !categoryId) return;
@@ -55,22 +68,35 @@ export default function ReviewPage() {
       <PageHeader
         title={t("review.title")}
         description={t("review.subtitle")}
+        icon={ClipboardCheck}
       />
 
       <Card>
-        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-          <dt className="text-muted">{t("review.client")}</dt>
+        <dl className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3 text-sm">
+          <dt className="flex items-center gap-1.5 text-muted">
+            <User className="h-4 w-4" />
+            {t("review.client")}
+          </dt>
           <dd className="text-ink">{client.clientName}</dd>
 
-          <dt className="text-muted">{t("review.venue")}</dt>
+          <dt className="flex items-center gap-1.5 text-muted">
+            <MapPin className="h-4 w-4" />
+            {t("review.venue")}
+          </dt>
           <dd className="text-ink">{client.eventVenue}</dd>
 
-          <dt className="text-muted">{t("review.dateTime")}</dt>
+          <dt className="flex items-center gap-1.5 text-muted">
+            <CalendarClock className="h-4 w-4" />
+            {t("review.dateTime")}
+          </dt>
           <dd className="text-ink">
             {client.eventDate} · {client.eventTime}
           </dd>
 
-          <dt className="text-muted">{t("review.category")}</dt>
+          <dt className="flex items-center gap-1.5 text-muted">
+            <CategoryIcon className="h-4 w-4" />
+            {t("review.category")}
+          </dt>
           <dd className="text-ink">{t(`category.${categoryId}`)}</dd>
         </dl>
 
@@ -97,7 +123,8 @@ export default function ReviewPage() {
         </ul>
 
         {error ? (
-          <p className="mt-4 text-sm text-danger">
+          <p className="mt-4 flex items-center gap-1.5 text-sm text-danger">
+            <AlertCircle className="h-4 w-4 shrink-0" />
             {t("review.downloadError")}
           </p>
         ) : null}
@@ -107,9 +134,15 @@ export default function ReviewPage() {
             variant="secondary"
             onClick={() => router.push("/order/items")}
           >
+            <Pencil className="h-4 w-4" />
             {t("review.edit")}
           </Button>
           <Button onClick={handleDownload} disabled={downloading}>
+            {downloading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
             {downloading ? t("review.generating") : t("review.download")}
           </Button>
         </div>

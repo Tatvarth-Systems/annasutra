@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+import { ClipboardPlus, LogOut } from "lucide-react";
 import { useT } from "@/lib/i18n/provider";
 import {
   clearSessionCookie,
@@ -40,9 +41,11 @@ export default function WelcomePage() {
 
         <div className="mt-6 flex flex-col gap-2">
           <Button onClick={() => router.push("/order/client")}>
+            <ClipboardPlus className="h-4 w-4" />
             {t("welcome.createOrder")}
           </Button>
           <Button variant="ghost" onClick={handleSignOut}>
+            <LogOut className="h-4 w-4" />
             {t("auth.signOut")}
           </Button>
         </div>

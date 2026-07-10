@@ -1,5 +1,6 @@
 "use client";
 
+import { PackageOpen, Pencil, Trash2 } from "lucide-react";
 import type { OrderItem } from "@/lib/order/types";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { useT } from "@/lib/i18n/provider";
@@ -22,9 +23,10 @@ export function ItemsTable({ items, onEdit, onDelete }: ItemsTableProps) {
 
   if (items.length === 0) {
     return (
-      <p className="rounded-md border border-dashed border-line px-4 py-6 text-center text-sm text-muted">
+      <div className="flex flex-col items-center gap-2 rounded-md border border-dashed border-line px-4 py-8 text-center text-sm text-muted">
+        <PackageOpen className="h-6 w-6" />
         {t("items.emptyState")}
-      </p>
+      </div>
     );
   }
 
@@ -46,9 +48,11 @@ export function ItemsTable({ items, onEdit, onDelete }: ItemsTableProps) {
           </div>
           <div className="flex shrink-0 gap-2">
             <Button variant="ghost" onClick={() => onEdit(item)}>
+              <Pencil className="h-4 w-4" />
               {t("common.edit")}
             </Button>
             <Button variant="ghost" onClick={() => onDelete(item.uid)}>
+              <Trash2 className="h-4 w-4" />
               {t("common.delete")}
             </Button>
           </div>

@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { CheckCircle2, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 type ToastAction = {
@@ -56,6 +57,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               "pointer-events-auto flex items-center gap-3 rounded-md bg-ink px-4 py-2.5 text-sm text-white shadow-lg",
             )}
           >
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-soft" />
             <span>{toast.text}</span>
             {toast.action ? (
               <button
@@ -68,6 +70,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 {toast.action.label}
               </button>
             ) : null}
+            <button
+              className="shrink-0 text-white/70 hover:text-white"
+              aria-label="Dismiss"
+              onClick={() => dismiss(toast.id)}
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         ))}
       </div>

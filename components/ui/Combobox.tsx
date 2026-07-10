@@ -7,6 +7,7 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
+import { Check, Search } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 export type ComboboxOption = {
@@ -103,6 +104,7 @@ export function Combobox({
 
   return (
     <div ref={rootRef} className="relative">
+      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
       <input
         id={id}
         role="combobox"
@@ -115,7 +117,7 @@ export function Combobox({
         }
         autoComplete="off"
         className={cn(
-          "w-full rounded-md border bg-white px-3 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand/40",
+          "w-full rounded-md border bg-white py-2 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand/40",
           invalid ? "border-danger" : "border-line",
         )}
         placeholder={placeholder}
@@ -138,7 +140,10 @@ export function Combobox({
           className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-line bg-white py-1 shadow-lg"
         >
           {filtered.length === 0 ? (
-            <li className="px-3 py-2 text-sm text-muted">{emptyText}</li>
+            <li className="flex items-center gap-2 px-3 py-2 text-sm text-muted">
+              <Search className="h-4 w-4" />
+              {emptyText}
+            </li>
           ) : (
             filtered.map((option, index) => (
               <li
@@ -147,7 +152,7 @@ export function Combobox({
                 role="option"
                 aria-selected={option.id === value}
                 className={cn(
-                  "cursor-pointer px-3 py-2 text-sm",
+                  "flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-sm",
                   index === activeIndex
                     ? "bg-brand-soft text-brand"
                     : "text-ink",
@@ -160,6 +165,9 @@ export function Combobox({
                 }}
               >
                 {option.label}
+                {option.id === value ? (
+                  <Check className="h-4 w-4 shrink-0" />
+                ) : null}
               </li>
             ))
           )}

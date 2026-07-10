@@ -2,6 +2,18 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import {
+  ArrowRight,
+  CalendarDays,
+  Clock,
+  ClipboardList,
+  MapPin,
+  Phone,
+  StickyNote,
+  Tag,
+  User,
+  Users,
+} from "lucide-react";
 import { useT } from "@/lib/i18n/provider";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import type { ClientDetails, EventType } from "@/lib/order/types";
@@ -92,6 +104,7 @@ export default function ClientDetailsPage() {
       <PageHeader
         title={t("client.title")}
         description={t("client.subtitle")}
+        icon={ClipboardList}
       />
 
       <Card>
@@ -104,6 +117,7 @@ export default function ClientDetailsPage() {
           >
             <Input
               id="clientName"
+              icon={User}
               value={form.clientName}
               invalid={errors.clientName}
               onChange={(event) => update("clientName", event.target.value)}
@@ -118,6 +132,7 @@ export default function ClientDetailsPage() {
             <Input
               id="contactNumber"
               type="tel"
+              icon={Phone}
               value={form.contactNumber}
               onChange={(event) => update("contactNumber", event.target.value)}
             />
@@ -128,23 +143,26 @@ export default function ClientDetailsPage() {
               {t("client.eventType")}
               <span className="ml-1 text-muted">({t("common.optional")})</span>
             </Label>
-            <select
-              id="eventType"
-              className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
-              value={form.eventType}
-              onChange={(event) =>
-                update("eventType", event.target.value as EventType | "")
-              }
-            >
-              <option value=""></option>
-              {EVENT_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {t(
-                    `client.eventType${type[0].toUpperCase()}${type.slice(1)}`,
-                  )}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <Tag className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+              <select
+                id="eventType"
+                className="w-full rounded-md border border-line bg-white py-2 pl-9 pr-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
+                value={form.eventType}
+                onChange={(event) =>
+                  update("eventType", event.target.value as EventType | "")
+                }
+              >
+                <option value=""></option>
+                {EVENT_TYPES.map((type) => (
+                  <option key={type} value={type}>
+                    {t(
+                      `client.eventType${type[0].toUpperCase()}${type.slice(1)}`,
+                    )}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <Field
@@ -155,6 +173,7 @@ export default function ClientDetailsPage() {
           >
             <Input
               id="eventVenue"
+              icon={MapPin}
               value={form.eventVenue}
               invalid={errors.eventVenue}
               onChange={(event) => update("eventVenue", event.target.value)}
@@ -171,6 +190,7 @@ export default function ClientDetailsPage() {
               <Input
                 id="eventDate"
                 type="date"
+                icon={CalendarDays}
                 value={form.eventDate}
                 invalid={errors.eventDate}
                 onChange={(event) => update("eventDate", event.target.value)}
@@ -186,6 +206,7 @@ export default function ClientDetailsPage() {
               <Input
                 id="eventTime"
                 type="time"
+                icon={Clock}
                 value={form.eventTime}
                 invalid={errors.eventTime}
                 onChange={(event) => update("eventTime", event.target.value)}
@@ -202,6 +223,7 @@ export default function ClientDetailsPage() {
               id="guestCount"
               type="number"
               min={0}
+              icon={Users}
               value={form.guestCount}
               onChange={(event) => update("guestCount", event.target.value)}
             />
@@ -209,7 +231,10 @@ export default function ClientDetailsPage() {
 
           <div>
             <Label htmlFor="notes">
-              {t("client.notes")}
+              <span className="inline-flex items-center gap-1.5">
+                <StickyNote className="h-3.5 w-3.5 text-muted" />
+                {t("client.notes")}
+              </span>
               <span className="ml-1 text-muted">({t("common.optional")})</span>
             </Label>
             <textarea
@@ -225,6 +250,7 @@ export default function ClientDetailsPage() {
 
           <Button type="submit" className="w-full">
             {t("common.continue")}
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </form>
       </Card>

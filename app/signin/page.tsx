@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Lock, LogIn, User } from "lucide-react";
 import { useT } from "@/lib/i18n/provider";
 import { CREDENTIALS } from "@/config/credentials";
 import { writeSessionCookie } from "@/lib/auth/session";
@@ -44,6 +45,7 @@ export default function SignInPage() {
               id="username"
               name="username"
               autoComplete="username"
+              icon={User}
               value={username}
               invalid={error}
               onChange={(event) => {
@@ -59,6 +61,7 @@ export default function SignInPage() {
               name="password"
               type="password"
               autoComplete="current-password"
+              icon={Lock}
               value={password}
               invalid={error}
               onChange={(event) => {
@@ -75,6 +78,7 @@ export default function SignInPage() {
           ) : null}
 
           <Button type="submit" className="w-full">
+            <LogIn className="h-4 w-4" />
             {t("auth.signIn")}
           </Button>
         </form>

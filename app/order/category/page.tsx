@@ -2,9 +2,11 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { LayoutGrid, UserPlus } from "lucide-react";
 import { useT } from "@/lib/i18n/provider";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { CATEGORIES } from "@/data/categories";
+import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { CategoryCard } from "@/components/order/CategoryCard";
@@ -38,8 +40,10 @@ export default function CategoryPage() {
       <PageHeader
         title={t("category.title")}
         description={t("category.subtitle", { name: client.clientName })}
+        icon={LayoutGrid}
         action={
           <Button variant="secondary" onClick={handleNewClient}>
+            <UserPlus className="h-4 w-4" />
             {t("category.newClient")}
           </Button>
         }
@@ -52,6 +56,7 @@ export default function CategoryPage() {
           <CategoryCard
             key={category.id}
             label={t(`category.${category.id}`)}
+            icon={CATEGORY_ICONS[category.id]}
             selected={category.id === categoryId}
             onClick={() => handleSelect(category.id)}
           />

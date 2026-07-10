@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 import { useT } from "@/lib/i18n/provider";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import type { OrderItem } from "@/lib/order/types";
+import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useToast } from "@/components/ui/Toast";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -63,6 +65,7 @@ export default function ItemsPage() {
           category: t(`category.${categoryId}`),
           name: client.clientName,
         })}
+        icon={CATEGORY_ICONS[categoryId]}
       />
 
       <ClientSummary client={client} />
@@ -89,6 +92,7 @@ export default function ItemsPage() {
           onClick={() => router.push("/order/review")}
         >
           {t("items.review")}
+          <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
     </div>

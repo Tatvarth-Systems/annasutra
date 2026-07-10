@@ -1,13 +1,17 @@
+import { CalendarClock, MapPin } from "lucide-react";
 import type { ClientDetails } from "@/lib/order/types";
 
 export function ClientSummary({ client }: { client: ClientDetails }) {
   return (
-    <div className="mb-6 rounded-md border border-line bg-brand-soft px-4 py-3 text-sm text-ink">
+    <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 rounded-md border border-line bg-brand-soft px-4 py-3 text-sm text-ink">
       <span className="font-medium">{client.clientName}</span>
-      <span className="text-muted"> · {client.eventVenue}</span>
-      <span className="text-muted">
-        {" "}
-        · {client.eventDate} {client.eventTime}
+      <span className="inline-flex items-center gap-1 text-muted">
+        <MapPin className="h-3.5 w-3.5" />
+        {client.eventVenue}
+      </span>
+      <span className="inline-flex items-center gap-1 text-muted">
+        <CalendarClock className="h-3.5 w-3.5" />
+        {client.eventDate} {client.eventTime}
       </span>
     </div>
   );
