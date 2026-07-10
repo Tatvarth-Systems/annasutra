@@ -51,7 +51,12 @@ function interpolate(
   );
 }
 
-export function useT() {
+export type TFunction = (
+  key: string,
+  vars?: Record<string, string | number>,
+) => string;
+
+export function useT(): TFunction {
   const context = useContext(LocaleContext);
   if (!context) {
     throw new Error("useT must be used within a LocaleProvider");

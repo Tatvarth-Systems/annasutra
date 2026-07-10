@@ -101,6 +101,7 @@
     "time": "Time",
     "guests": "Guests",
     "category": "Category",
+    "itemCount": "{count} items",
     "columnIndex": "#",
     "columnItem": "Item",
     "columnQty": "Qty",

@@ -106,11 +106,11 @@ export default function ReviewPage() {
           {t("review.itemCount", { count: items.length })}
         </p>
 
-        <ul className="mt-2 divide-y divide-line rounded-md border border-line">
+        <ul className="mt-2 divide-y divide-line overflow-hidden rounded-md border border-line">
           {items.map((item) => (
             <li
               key={item.uid}
-              className="flex items-center justify-between px-4 py-2 text-sm"
+              className="flex items-center justify-between px-4 py-2 text-sm odd:bg-white even:bg-line/20"
             >
               <span className="text-ink">
                 {item.itemId === CUSTOM_ITEM_ID
