@@ -1,13 +1,9 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import type { KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Search } from "lucide-react";
+
 import { cn } from "@/lib/utils/cn";
 
 export type ComboboxOption = {
@@ -108,7 +104,7 @@ export const Combobox = ({
 
   return (
     <div ref={rootRef} className="relative">
-      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+      <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted" />
       <input
         id={id}
         role="combobox"
@@ -121,7 +117,7 @@ export const Combobox = ({
         }
         autoComplete="off"
         className={cn(
-          "w-full rounded-md border bg-white py-2 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand/40",
+          "w-full rounded-md border bg-white py-2 pr-3 pl-9 text-sm text-ink placeholder:text-muted focus:ring-2 focus:ring-brand/40 focus:outline-none",
           invalid ? "border-danger" : "border-line",
         )}
         placeholder={placeholder}
@@ -169,9 +165,7 @@ export const Combobox = ({
                 }}
               >
                 {option.label}
-                {option.id === value && (
-                  <Check className="h-4 w-4 shrink-0" />
-                )}
+                {option.id === value && <Check className="h-4 w-4 shrink-0" />}
               </li>
             ))
           )}

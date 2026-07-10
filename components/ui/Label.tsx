@@ -1,4 +1,5 @@
 import { type LabelHTMLAttributes } from "react";
+
 import { cn } from "@/lib/utils/cn";
 
 /** Label component with standard styling and spacing. */

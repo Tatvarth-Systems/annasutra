@@ -4,13 +4,14 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChefHat, ChevronDown, CircleUserRound, LogOut } from "lucide-react";
-import { useT } from "@/lib/i18n/provider";
+
 import {
   clearSessionCookie,
   getSessionServerSnapshot,
   getSessionSnapshot,
   subscribeToSession,
 } from "@/lib/auth/session";
+import { useT } from "@/lib/i18n/provider";
 import { clearDraft } from "@/lib/order/storage";
 
 /** Navigation header with user menu dropdown. */
@@ -63,7 +64,7 @@ export const Navbar = () => {
               onClick={() => setOpen((value) => !value)}
               aria-expanded={open}
               aria-haspopup="menu"
-              className="flex items-center gap-1.5 rounded-full py-1 pl-1 pr-2 text-sm text-ink hover:bg-brand-soft"
+              className="flex items-center gap-1.5 rounded-full py-1 pr-2 pl-1 text-sm text-ink hover:bg-brand-soft"
             >
               <CircleUserRound className="h-7 w-7 text-brand" />
               <span className="hidden sm:inline">{username}</span>

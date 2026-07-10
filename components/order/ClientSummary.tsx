@@ -1,5 +1,6 @@
-import { CalendarClock, MapPin } from "lucide-react";
 import type { ClientDetails } from "@/lib/order/types";
+import { CalendarClock, MapPin } from "lucide-react";
+
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 
 /** Summary card displaying client details. */

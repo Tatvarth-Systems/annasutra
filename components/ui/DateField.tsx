@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+
 import { cn } from "@/lib/utils/cn";
 import {
   buildMonthGrid,
@@ -111,7 +112,7 @@ export const DateField = ({
         aria-haspopup="dialog"
         aria-expanded={open}
         className={cn(
-          "flex w-full items-center gap-2 rounded-md border bg-white px-3 py-2 text-left text-sm focus:outline-none focus:ring-2 focus:ring-brand/40",
+          "flex w-full items-center gap-2 rounded-md border bg-white px-3 py-2 text-left text-sm focus:ring-2 focus:ring-brand/40 focus:outline-none",
           invalid ? "border-danger" : "border-line",
           value ? "text-ink" : "text-muted",
         )}

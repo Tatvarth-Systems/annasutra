@@ -12,15 +12,16 @@ import {
   Pencil,
   User,
 } from "lucide-react";
-import { useT } from "@/lib/i18n/provider";
-import { useOrderDraft } from "@/lib/order/useOrderDraft";
+
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
+import { useT } from "@/lib/i18n/provider";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
+import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { generateOrderPdf } from "@/lib/pdf/generateOrderPdf";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 
 /** Order review page with PDF download functionality. */
 const ReviewPage = () => {

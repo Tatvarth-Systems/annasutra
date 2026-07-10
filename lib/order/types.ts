@@ -1,5 +1,5 @@
-import type { Unit } from "@/data/units";
 import type { CategoryId } from "@/data/categories";
+import type { Unit } from "@/data/units";
 
 export type EventType = "wedding" | "engagement" | "birthday" | "other";
 

@@ -1,6 +1,7 @@
-import type { ClientDetails } from "@/lib/order/types";
 import type { CategoryId } from "@/data/categories";
 import type { TFunction } from "@/lib/i18n/provider";
+import type { ClientDetails } from "@/lib/order/types";
+
 import { formatDateDisplay } from "@/lib/utils/date";
 
 /** Converts text to CamelCase filename-safe segment. */

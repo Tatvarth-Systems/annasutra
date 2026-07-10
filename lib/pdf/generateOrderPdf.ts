@@ -1,10 +1,11 @@
-import type { ClientDetails, OrderItem } from "@/lib/order/types";
 import type { CategoryId } from "@/data/categories";
-import { CUSTOM_ITEM_ID } from "@/data/catalog";
+import type { TFunction } from "@/lib/i18n/provider";
+import type { ClientDetails, OrderItem } from "@/lib/order/types";
+
 import { BUSINESS } from "@/config/business";
+import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { buildPdfFilename } from "@/lib/pdf/filename";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
-import type { TFunction } from "@/lib/i18n/provider";
 
 type GenerateOrderPdfArgs = {
   client: ClientDetails;

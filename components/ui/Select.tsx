@@ -1,5 +1,7 @@
+import type { LucideIcon } from "lucide-react";
 import { type SelectHTMLAttributes } from "react";
-import { ChevronDown, type LucideIcon } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+
 import { cn } from "@/lib/utils/cn";
 
 type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
@@ -18,11 +20,11 @@ export const Select = ({
   return (
     <div className="relative">
       {Icon && (
-        <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+        <Icon className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted" />
       )}
       <select
         className={cn(
-          "w-full appearance-none rounded-md border bg-white py-2 pr-9 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40",
+          "w-full appearance-none rounded-md border bg-white py-2 pr-9 text-sm text-ink focus:ring-2 focus:ring-brand/40 focus:outline-none",
           Icon ? "pl-9" : "pl-3",
           invalid ? "border-danger" : "border-line",
           className,
@@ -31,7 +33,7 @@ export const Select = ({
       >
         {children}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+      <ChevronDown className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted" />
     </div>
   );
 };

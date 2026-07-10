@@ -1,19 +1,21 @@
 "use client";
 
+import type { ComboboxOption } from "@/components/ui/Combobox";
+import type { CategoryId } from "@/data/categories";
+import type { Unit } from "@/data/units";
+import type { OrderItem } from "@/lib/order/types";
 import { useMemo, useState } from "react";
 import { Pencil, Plus, StickyNote, X } from "lucide-react";
-import type { CategoryId } from "@/data/categories";
-import { getItemsForCategory } from "@/data/catalog";
-import { CUSTOM_ITEM_ID } from "@/data/catalog";
-import { UNIT_IDS, type Unit, getUnitInputConfig } from "@/data/units";
-import type { OrderItem } from "@/lib/order/types";
-import { useT } from "@/lib/i18n/provider";
-import { Combobox, type ComboboxOption } from "@/components/ui/Combobox";
+
+import { Button } from "@/components/ui/Button";
+import { Combobox } from "@/components/ui/Combobox";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
 import { Label } from "@/components/ui/Label";
-import { Button } from "@/components/ui/Button";
+import { Select } from "@/components/ui/Select";
+import { CUSTOM_ITEM_ID, getItemsForCategory } from "@/data/catalog";
+import { getUnitInputConfig, UNIT_IDS } from "@/data/units";
+import { useT } from "@/lib/i18n/provider";
 
 type AddItemRowProps = {
   categoryId: CategoryId;

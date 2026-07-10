@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Clock } from "lucide-react";
+
+import { useT } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 import {
   formatTimeDisplay,
@@ -9,7 +11,6 @@ import {
   to24Hour,
   toHHMM,
 } from "@/lib/utils/date";
-import { useT } from "@/lib/i18n/provider";
 
 const HOURS = Array.from({ length: 12 }, (_, index) => index + 1);
 const MINUTES = [0, 15, 30, 45];
@@ -71,7 +72,7 @@ export const TimeField = ({
         aria-haspopup="dialog"
         aria-expanded={open}
         className={cn(
-          "flex w-full items-center gap-2 rounded-md border bg-white px-3 py-2 text-left text-sm focus:outline-none focus:ring-2 focus:ring-brand/40",
+          "flex w-full items-center gap-2 rounded-md border bg-white px-3 py-2 text-left text-sm focus:ring-2 focus:ring-brand/40 focus:outline-none",
           invalid ? "border-danger" : "border-line",
           value ? "text-ink" : "text-muted",
         )}

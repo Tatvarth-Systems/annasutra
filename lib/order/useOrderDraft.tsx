@@ -1,8 +1,9 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import type { CategoryId } from "@/data/categories";
 import type { ClientDetails, OrderDraft, OrderItem } from "@/lib/order/types";
+import { useSyncExternalStore } from "react";
+
 import {
   clearDraft,
   emptyDraft,

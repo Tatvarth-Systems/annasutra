@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
+import { cookies } from "next/headers";
+
 import { resolveLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { LocaleProvider } from "@/lib/i18n/provider";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,7 +38,7 @@ const RootLayout = async ({
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-surface text-ink">
+      <body className="flex min-h-full flex-col bg-surface text-ink">
         <LocaleProvider locale={locale} messages={messages}>
           {children}
         </LocaleProvider>
