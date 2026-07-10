@@ -20,3 +20,7 @@ These rules apply across the entire codebase.
    ```
 
 3. **`&&` over `?` ternary when one side is `null`.** Write `condition && value` rather than `condition ? value : null`. Exception: if the condition can be `0`, `false`, or `''` — those short-circuit to the wrong value; keep the ternary.
+
+## Documentation lookups
+
+Use the **context7** MCP server for any library, framework, SDK, API, or CLI documentation lookup — Next.js, React, Tailwind, or any dependency in this repo — even ones you're confident about. Training data may be stale or, per the Next.js note above, this repo intentionally deviates from the standard API. Prefer context7 over web search or memory for anything version- or config-specific.
