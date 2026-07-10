@@ -1,16 +1,16 @@
+import type { CategoryId } from "@/data/categories";
+import type { LucideIcon } from "lucide-react";
 import {
   Apple,
   Armchair,
   Carrot,
   Milk,
   Nut,
-  Soup,
   ShoppingBasket,
+  Soup,
   Trash2,
   UtensilsCrossed,
-  type LucideIcon,
 } from "lucide-react";
-import type { CategoryId } from "@/data/categories";
 
 export const CATEGORY_ICONS: Record<CategoryId, LucideIcon> = {
   vegetables: Carrot,

@@ -1,7 +1,12 @@
 import { type HTMLAttributes } from "react";
+
 import { cn } from "@/lib/utils/cn";
 
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+/** Card container with standard border and shadow styling. */
+export const Card = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       className={cn(
@@ -11,4 +16,4 @@ export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
       {...props}
     />
   );
-}
+};

@@ -1,14 +1,16 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { ToastProvider } from "@/components/ui/Toast";
+import { usePathname } from "next/navigation";
+
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { ToastProvider } from "@/components/ui/Toast";
 import { useT } from "@/lib/i18n/provider";
 
 const STEP_KEYS = ["client", "category", "items", "review"] as const;
 
-export default function OrderLayout({ children }: { children: ReactNode }) {
+/** Order flow layout with breadcrumb navigation and toast provider. */
+const OrderLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const t = useT();
 
@@ -31,4 +33,6 @@ export default function OrderLayout({ children }: { children: ReactNode }) {
       </main>
     </ToastProvider>
   );
-}
+};
+
+export default OrderLayout;

@@ -1,8 +1,9 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import type { CategoryId } from "@/data/categories";
 import type { ClientDetails, OrderDraft, OrderItem } from "@/lib/order/types";
+import { useSyncExternalStore } from "react";
+
 import {
   clearDraft,
   emptyDraft,
@@ -17,65 +18,75 @@ let initialized = false;
 const listeners = new Set<Listener>();
 const SERVER_SNAPSHOT: OrderDraft = emptyDraft();
 
-function ensureInitialized(): void {
+/** Initializes snapshot from storage on first call. */
+const ensureInitialized = (): void => {
   if (initialized || typeof window === "undefined") return;
   snapshot = readDraft() ?? emptyDraft();
   initialized = true;
-}
+};
 
-function emit(): void {
+/** Notifies all registered listeners of draft changes. */
+const emit = (): void => {
   listeners.forEach((listener) => listener());
-}
+};
 
-function subscribe(listener: Listener): () => void {
+/** Registers a listener for draft changes and returns unsubscribe function. */
+const subscribe = (listener: Listener): (() => void) => {
   listeners.add(listener);
   return () => listeners.delete(listener);
-}
+};
 
-function getSnapshot(): OrderDraft {
+/** Returns current draft snapshot. */
+const getSnapshot = (): OrderDraft => {
   ensureInitialized();
   return snapshot;
-}
+};
 
-function getServerSnapshot(): OrderDraft {
+/** Server-side snapshot placeholder. */
+const getServerSnapshot = (): OrderDraft => {
   return SERVER_SNAPSHOT;
-}
+};
 
-function setClientDetails(details: ClientDetails): void {
+/** Updates client details, clears category and items. */
+const setClientDetails = (details: ClientDetails): void => {
   ensureInitialized();
   snapshot = { ...snapshot, client: details, categoryId: null, items: [] };
   writeDraft(snapshot);
   emit();
-}
+};
 
-function setCategory(categoryId: CategoryId): void {
+/** Updates category, clears items. */
+const setCategory = (categoryId: CategoryId): void => {
   ensureInitialized();
   if (snapshot.categoryId === categoryId) return;
   snapshot = { ...snapshot, categoryId, items: [] };
   writeDraft(snapshot);
   emit();
-}
+};
 
-function setItems(items: OrderItem[]): void {
+/** Updates order items. */
+const setItems = (items: OrderItem[]): void => {
   ensureInitialized();
   snapshot = { ...snapshot, items };
   writeDraft(snapshot);
   emit();
-}
+};
 
-function resetAfterDownload(): void {
+/** Clears category and items after download. */
+const resetAfterDownload = (): void => {
   ensureInitialized();
   snapshot = { ...snapshot, categoryId: null, items: [] };
   writeDraft(snapshot);
   emit();
-}
+};
 
-function startNewClient(): void {
+/** Clears entire draft and starts fresh client. */
+const startNewClient = (): void => {
   clearDraft();
   snapshot = emptyDraft();
   initialized = true;
   emit();
-}
+};
 
 type OrderDraftApi = {
   client: ClientDetails | null;
@@ -88,7 +99,8 @@ type OrderDraftApi = {
   startNewClient: typeof startNewClient;
 };
 
-export function useOrderDraft(): OrderDraftApi {
+/** Hook to access and modify order draft using external store. */
+export const useOrderDraft = (): OrderDraftApi => {
   const draft = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   return {
@@ -101,4 +113,4 @@ export function useOrderDraft(): OrderDraftApi {
     resetAfterDownload,
     startNewClient,
   };
-}
+};

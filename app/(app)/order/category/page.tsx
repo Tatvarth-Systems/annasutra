@@ -3,16 +3,18 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LayoutGrid, UserPlus } from "lucide-react";
-import { useT } from "@/lib/i18n/provider";
-import { useOrderDraft } from "@/lib/order/useOrderDraft";
-import { CATEGORIES } from "@/data/categories";
-import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Button } from "@/components/ui/Button";
+
 import { CategoryCard } from "@/components/order/CategoryCard";
 import { ClientSummary } from "@/components/order/ClientSummary";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { CATEGORIES } from "@/data/categories";
+import { useT } from "@/lib/i18n/provider";
+import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
+import { useOrderDraft } from "@/lib/order/useOrderDraft";
 
-export default function CategoryPage() {
+/** Category selection page with redirect to client page if no client. */
+const CategoryPage = () => {
   const t = useT();
   const router = useRouter();
   const { client, categoryId, setCategory, startNewClient } = useOrderDraft();
@@ -25,15 +27,17 @@ export default function CategoryPage() {
 
   if (!client) return null;
 
-  function handleSelect(id: (typeof CATEGORIES)[number]["id"]) {
+  /** Sets category and navigates to items page. */
+  const handleSelect = (id: (typeof CATEGORIES)[number]["id"]) => {
     setCategory(id);
     router.push("/order/items");
-  }
+  };
 
-  function handleNewClient() {
+  /** Clears draft and returns to client entry. */
+  const handleNewClient = () => {
     startNewClient();
     router.push("/order/client");
-  }
+  };
 
   return (
     <div>
@@ -64,4 +68,6 @@ export default function CategoryPage() {
       </div>
     </div>
   );
-}
+};
+
+export default CategoryPage;

@@ -1,20 +1,22 @@
 "use client";
 
+import type { OrderItem } from "@/lib/order/types";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { useT } from "@/lib/i18n/provider";
-import { useOrderDraft } from "@/lib/order/useOrderDraft";
-import type { OrderItem } from "@/lib/order/types";
-import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
-import { useToast } from "@/components/ui/Toast";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Button } from "@/components/ui/Button";
-import { ClientSummary } from "@/components/order/ClientSummary";
-import { AddItemRow } from "@/components/order/AddItemRow";
-import { ItemsTable } from "@/components/order/ItemsTable";
 
-export default function ItemsPage() {
+import { AddItemRow } from "@/components/order/AddItemRow";
+import { ClientSummary } from "@/components/order/ClientSummary";
+import { ItemsTable } from "@/components/order/ItemsTable";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { useToast } from "@/components/ui/Toast";
+import { useT } from "@/lib/i18n/provider";
+import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
+import { useOrderDraft } from "@/lib/order/useOrderDraft";
+
+/** Items selection page with add/edit/delete functionality. */
+const ItemsPage = () => {
   const t = useT();
   const router = useRouter();
   const { client, categoryId, items, setItems } = useOrderDraft();
@@ -31,7 +33,8 @@ export default function ItemsPage() {
 
   if (!client || !categoryId) return null;
 
-  function handleSubmitItem(item: OrderItem) {
+  /** Adds new item or updates existing one. */
+  const handleSubmitItem = (item: OrderItem) => {
     const exists = items.some((existing) => existing.uid === item.uid);
     setItems(
       exists
@@ -39,9 +42,10 @@ export default function ItemsPage() {
         : [...items, item],
     );
     setEditingItem(null);
-  }
+  };
 
-  function handleDelete(uid: string) {
+  /** Deletes item with undo toast. */
+  const handleDelete = (uid: string) => {
     const index = items.findIndex((item) => item.uid === uid);
     if (index === -1) return;
     const removed = items[index];
@@ -55,7 +59,7 @@ export default function ItemsPage() {
         setItems([...next.slice(0, index), removed, ...next.slice(index)]);
       },
     });
-  }
+  };
 
   return (
     <div>
@@ -97,4 +101,6 @@ export default function ItemsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ItemsPage;

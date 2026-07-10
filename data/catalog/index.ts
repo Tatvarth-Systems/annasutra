@@ -1,14 +1,15 @@
-import type { CategoryId } from "@/data/categories";
 import type { CatalogItem } from "@/data/catalog/types";
-import { vegetables } from "@/data/catalog/vegetables";
-import { fruits } from "@/data/catalog/fruits";
+import type { CategoryId } from "@/data/categories";
+
 import { dairy } from "@/data/catalog/dairy";
-import { grocery } from "@/data/catalog/grocery";
-import { spices } from "@/data/catalog/spices";
-import { dryFruits } from "@/data/catalog/dryFruits";
 import { disposables } from "@/data/catalog/disposables";
-import { utensils } from "@/data/catalog/utensils";
+import { dryFruits } from "@/data/catalog/dryFruits";
+import { fruits } from "@/data/catalog/fruits";
+import { grocery } from "@/data/catalog/grocery";
 import { rentals } from "@/data/catalog/rentals";
+import { spices } from "@/data/catalog/spices";
+import { utensils } from "@/data/catalog/utensils";
+import { vegetables } from "@/data/catalog/vegetables";
 
 export const CUSTOM_ITEM_ID = "__custom__";
 

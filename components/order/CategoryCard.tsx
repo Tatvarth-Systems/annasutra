@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+
 import { cn } from "@/lib/utils/cn";
 
 type CategoryCardProps = {
@@ -8,12 +9,13 @@ type CategoryCardProps = {
   onClick: () => void;
 };
 
-export function CategoryCard({
+/** Category selector card with icon and selection state. */
+export const CategoryCard = ({
   label,
   icon: Icon,
   selected,
   onClick,
-}: CategoryCardProps) {
+}: CategoryCardProps) => {
   return (
     <button
       type="button"
@@ -29,4 +31,4 @@ export function CategoryCard({
       {label}
     </button>
   );
-}
+};

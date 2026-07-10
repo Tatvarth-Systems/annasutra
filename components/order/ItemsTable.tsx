@@ -1,10 +1,11 @@
 "use client";
 
-import { PackageOpen, Pencil, Trash2 } from "lucide-react";
 import type { OrderItem } from "@/lib/order/types";
+import { PackageOpen, Pencil, Trash2 } from "lucide-react";
+
+import { Button } from "@/components/ui/Button";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { useT } from "@/lib/i18n/provider";
-import { Button } from "@/components/ui/Button";
 
 type ItemsTableProps = {
   items: OrderItem[];
@@ -12,14 +13,16 @@ type ItemsTableProps = {
   onDelete: (uid: string) => void;
 };
 
-export function ItemsTable({ items, onEdit, onDelete }: ItemsTableProps) {
+/** Table displaying order items with edit and delete actions. */
+export const ItemsTable = ({ items, onEdit, onDelete }: ItemsTableProps) => {
   const t = useT();
 
-  function labelFor(item: OrderItem): string {
+  /** Returns display label for an item. */
+  const labelFor = (item: OrderItem): string => {
     return item.itemId === CUSTOM_ITEM_ID
       ? (item.customName ?? "")
       : t(`item.${item.itemId}`);
-  }
+  };
 
   if (items.length === 0) {
     return (
@@ -60,4 +63,4 @@ export function ItemsTable({ items, onEdit, onDelete }: ItemsTableProps) {
       ))}
     </ul>
   );
-}
+};

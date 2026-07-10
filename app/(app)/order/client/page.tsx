@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import type { ClientDetails, EventType } from "@/lib/order/types";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
@@ -11,18 +13,18 @@ import {
   User,
   Users,
 } from "lucide-react";
-import { useT } from "@/lib/i18n/provider";
-import { useOrderDraft } from "@/lib/order/useOrderDraft";
-import type { ClientDetails, EventType } from "@/lib/order/types";
-import { PageHeader } from "@/components/ui/PageHeader";
+
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { DateField } from "@/components/ui/DateField";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
-import { DateField } from "@/components/ui/DateField";
-import { TimeField } from "@/components/ui/TimeField";
 import { Label } from "@/components/ui/Label";
-import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Select } from "@/components/ui/Select";
+import { TimeField } from "@/components/ui/TimeField";
+import { useT } from "@/lib/i18n/provider";
+import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { cn } from "@/lib/utils/cn";
 
 const EVENT_TYPES: EventType[] = ["wedding", "engagement", "birthday", "other"];
@@ -37,7 +39,8 @@ type FormState = {
   notes: string;
 };
 
-function toFormState(client: ClientDetails | null): FormState {
+/** Converts ClientDetails to form state or returns empty form. */
+const toFormState = (client: ClientDetails | null): FormState => {
   return {
     clientName: client?.clientName ?? "",
     eventType: client?.eventType ?? "",
@@ -47,9 +50,10 @@ function toFormState(client: ClientDetails | null): FormState {
     guestCount: client?.guestCount ? String(client.guestCount) : "",
     notes: client?.notes ?? "",
   };
-}
+};
 
-export default function ClientDetailsPage() {
+/** Client details entry form with validation. */
+const ClientDetailsPage = () => {
   const t = useT();
   const router = useRouter();
   const { client, setClientDetails } = useOrderDraft();
@@ -65,12 +69,14 @@ export default function ClientDetailsPage() {
     setForm(toFormState(client));
   }
 
-  function update<K extends keyof FormState>(key: K, value: FormState[K]) {
+  /** Updates a form field and clears its error. */
+  const update = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: false }));
-  }
+  };
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  /** Validates form fields and submits client details. */
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const nextErrors: Partial<Record<keyof FormState, boolean>> = {
@@ -94,7 +100,7 @@ export default function ClientDetailsPage() {
 
     setClientDetails(details);
     router.push("/order/category");
-  }
+  };
 
   return (
     <div>
@@ -217,7 +223,7 @@ export default function ClientDetailsPage() {
               id="notes"
               rows={3}
               className={cn(
-                "w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand/40",
+                "w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-muted focus:ring-2 focus:ring-brand/40 focus:outline-none",
               )}
               value={form.notes}
               onChange={(event) => update("notes", event.target.value)}
@@ -232,4 +238,6 @@ export default function ClientDetailsPage() {
       </Card>
     </div>
   );
-}
+};
+
+export default ClientDetailsPage;

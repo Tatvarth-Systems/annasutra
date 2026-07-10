@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Clock } from "lucide-react";
+
+import { useT } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 import {
   formatTimeDisplay,
@@ -9,7 +11,6 @@ import {
   to24Hour,
   toHHMM,
 } from "@/lib/utils/date";
-import { useT } from "@/lib/i18n/provider";
 
 const HOURS = Array.from({ length: 12 }, (_, index) => index + 1);
 const MINUTES = [0, 15, 30, 45];
@@ -25,23 +26,25 @@ type TimeFieldProps = {
   placeholder?: string;
 };
 
-export function TimeField({
+/** Time picker component with hour, minute, and AM/PM selection. */
+export const TimeField = ({
   id,
   value,
   onChange,
   invalid,
   placeholder = "hh:mm AM/PM",
-}: TimeFieldProps) {
+}: TimeFieldProps) => {
   const t = useT();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    /** Closes picker when clicking outside. */
+    const handleClickOutside = (event: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -53,11 +56,12 @@ export function TimeField({
       ? 12
       : parsed.hour % 12
     : null;
-  const currentMinute = parsed ? parsed.minute : null;
+  const currentMinute = parsed && parsed.minute;
 
-  function commit(hour12: number, minute: number, period: Period) {
+  /** Commits selected time to onChange handler. */
+  const commit = (hour12: number, minute: number, period: Period) => {
     onChange(toHHMM(to24Hour(hour12, period), minute));
-  }
+  };
 
   return (
     <div ref={rootRef} className="relative">
@@ -68,7 +72,7 @@ export function TimeField({
         aria-haspopup="dialog"
         aria-expanded={open}
         className={cn(
-          "flex w-full items-center gap-2 rounded-md border bg-white px-3 py-2 text-left text-sm focus:outline-none focus:ring-2 focus:ring-brand/40",
+          "flex w-full items-center gap-2 rounded-md border bg-white px-3 py-2 text-left text-sm focus:ring-2 focus:ring-brand/40 focus:outline-none",
           invalid ? "border-danger" : "border-line",
           value ? "text-ink" : "text-muted",
         )}
@@ -77,7 +81,7 @@ export function TimeField({
         {value ? formatTimeDisplay(value) : placeholder}
       </button>
 
-      {open ? (
+      {open && (
         <div
           role="dialog"
           aria-label="Choose time"
@@ -150,7 +154,7 @@ export function TimeField({
             {t("common.done")}
           </button>
         </div>
-      ) : null}
+      )}
     </div>
   );
-}
+};

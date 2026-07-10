@@ -3,16 +3,18 @@
 import { useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { ClipboardPlus } from "lucide-react";
-import { useT } from "@/lib/i18n/provider";
+
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import {
   getSessionServerSnapshot,
   getSessionSnapshot,
   subscribeToSession,
 } from "@/lib/auth/session";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { useT } from "@/lib/i18n/provider";
 
-export default function WelcomePage() {
+/** Welcome page with new order button for authenticated users. */
+const WelcomePage = () => {
   const t = useT();
   const router = useRouter();
   const username = useSyncExternalStore(
@@ -40,4 +42,6 @@ export default function WelcomePage() {
       </Card>
     </main>
   );
-}
+};
+
+export default WelcomePage;

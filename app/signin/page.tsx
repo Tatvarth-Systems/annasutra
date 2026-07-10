@@ -1,24 +1,28 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, LogIn, User } from "lucide-react";
-import { useT } from "@/lib/i18n/provider";
-import { CREDENTIALS } from "@/config/credentials";
-import { writeSessionCookie } from "@/lib/auth/session";
+
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
+import { CREDENTIALS } from "@/config/credentials";
+import { writeSessionCookie } from "@/lib/auth/session";
+import { useT } from "@/lib/i18n/provider";
 
-export default function SignInPage() {
+/** Sign in page with username and password form. */
+const SignInPage = () => {
   const t = useT();
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  /** Validates credentials and creates session if valid. */
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (
@@ -31,7 +35,7 @@ export default function SignInPage() {
     }
 
     setError(true);
-  }
+  };
 
   return (
     <main className="flex flex-1 items-center justify-center px-4 py-12">
@@ -71,11 +75,11 @@ export default function SignInPage() {
             />
           </Field>
 
-          {error ? (
+          {error && (
             <p className="text-sm text-danger">
               {t("auth.invalidCredentials")}
             </p>
-          ) : null}
+          )}
 
           <Button type="submit" className="w-full">
             <LogIn className="h-4 w-4" />
@@ -85,4 +89,6 @@ export default function SignInPage() {
       </Card>
     </main>
   );
-}
+};
+
+export default SignInPage;
