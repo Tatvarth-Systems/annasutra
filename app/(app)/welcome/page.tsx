@@ -2,15 +2,13 @@
 
 import { useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import { ClipboardPlus, LogOut } from "lucide-react";
+import { ClipboardPlus } from "lucide-react";
 import { useT } from "@/lib/i18n/provider";
 import {
-  clearSessionCookie,
   getSessionServerSnapshot,
   getSessionSnapshot,
   subscribeToSession,
 } from "@/lib/auth/session";
-import { clearDraft } from "@/lib/order/storage";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
@@ -22,12 +20,6 @@ export default function WelcomePage() {
     getSessionSnapshot,
     getSessionServerSnapshot,
   );
-
-  function handleSignOut() {
-    clearSessionCookie();
-    clearDraft();
-    router.replace("/signin");
-  }
 
   if (!username) return null;
 
@@ -43,10 +35,6 @@ export default function WelcomePage() {
           <Button onClick={() => router.push("/order/client")}>
             <ClipboardPlus className="h-4 w-4" />
             {t("welcome.createOrder")}
-          </Button>
-          <Button variant="ghost" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4" />
-            {t("auth.signOut")}
           </Button>
         </div>
       </Card>
