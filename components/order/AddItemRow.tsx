@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AlertTriangle, Pencil, Plus, StickyNote, X } from "lucide-react";
+import { Pencil, Plus, StickyNote, X } from "lucide-react";
 import type { CategoryId } from "@/data/categories";
 import { getItemsForCategory } from "@/data/catalog";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
@@ -42,16 +42,37 @@ export function AddItemRow({
     [categoryId],
   );
 
+  const usedItemIds = useMemo(() => {
+    const ids = new Set(items.map((item) => item.itemId));
+    if (editingItem) ids.delete(editingItem.itemId);
+    return ids;
+  }, [items, editingItem]);
+
   const options: ComboboxOption[] = useMemo(
     () => [
       { id: CUSTOM_ITEM_ID, label: t("items.otherOption"), pinned: true },
-      ...catalogItems.map((item) => ({
-        id: item.id,
-        label: t(`item.${item.id}`),
-      })),
+      ...catalogItems
+        .filter((item) => !usedItemIds.has(item.id))
+        .map((item) => ({
+          id: item.id,
+          label: t(`item.${item.id}`),
+        })),
     ],
-    [catalogItems, t],
+    [catalogItems, usedItemIds, t],
   );
+
+  const usedLabels = useMemo(() => {
+    const labels = new Set<string>();
+    for (const item of items) {
+      if (editingItem && item.uid === editingItem.uid) continue;
+      const label =
+        item.itemId === CUSTOM_ITEM_ID
+          ? (item.customName ?? "")
+          : t(`item.${item.itemId}`);
+      labels.add(label.trim().toLowerCase());
+    }
+    return labels;
+  }, [items, editingItem, t]);
 
   const [itemId, setItemId] = useState<string | null>(null);
   const [customName, setCustomName] = useState("");
@@ -91,21 +112,21 @@ export function AddItemRow({
     }
   }
 
-  const isDuplicate = useMemo(() => {
-    if (!itemId || itemId === CUSTOM_ITEM_ID) return false;
-    return items.some(
-      (item) => item.itemId === itemId && item.uid !== editingItem?.uid,
-    );
-  }, [items, itemId, editingItem]);
-
   function handleSubmit() {
     if (!itemId) {
       setError(t("client.requiredError"));
       return;
     }
-    if (itemId === CUSTOM_ITEM_ID && customName.trim() === "") {
-      setError(t("client.requiredError"));
-      return;
+    if (itemId === CUSTOM_ITEM_ID) {
+      const trimmedName = customName.trim();
+      if (trimmedName === "") {
+        setError(t("client.requiredError"));
+        return;
+      }
+      if (usedLabels.has(trimmedName.toLowerCase())) {
+        setError(t("items.duplicateNameError"));
+        return;
+      }
     }
     const parsedQty = Number(qty);
     if (!qty || Number.isNaN(parsedQty) || parsedQty <= 0) {
@@ -196,12 +217,6 @@ export function AddItemRow({
         />
       </div>
 
-      {isDuplicate ? (
-        <p className="mt-3 flex items-center gap-1.5 text-sm text-brand">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          {t("items.duplicateWarning")}
-        </p>
-      ) : null}
       {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
 
       <div className="mt-4 flex gap-2">

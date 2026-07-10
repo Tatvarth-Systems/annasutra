@@ -31,11 +31,11 @@ export function ItemsTable({ items, onEdit, onDelete }: ItemsTableProps) {
   }
 
   return (
-    <ul className="divide-y divide-line rounded-lg border border-line bg-white">
+    <ul className="divide-y divide-line overflow-hidden rounded-lg border border-line bg-white">
       {items.map((item) => (
         <li
           key={item.uid}
-          className="flex items-center justify-between gap-3 px-4 py-3"
+          className="flex items-center justify-between gap-3 px-4 py-3 odd:bg-white even:bg-line/20"
         >
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-ink">

@@ -69,6 +69,7 @@
     "itemPlaceholder": "Search item...",
     "otherOption": "Other — enter custom item",
     "customNameLabel": "Custom item name",
+    "duplicateNameError": "This item is already in the list",
     "qtyLabel": "Quantity",
     "unitLabel": "Unit",
     "noteLabel": "Note",
@@ -76,7 +77,6 @@
     "updateItem": "Update item",
     "cancelEdit": "Cancel edit",
     "emptyState": "No items added yet",
-    "duplicateWarning": "Already in list — editing will merge",
     "deletedToast": "Item removed",
     "review": "Review order"
   },
