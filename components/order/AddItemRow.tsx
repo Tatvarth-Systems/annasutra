@@ -11,6 +11,7 @@ import { useT } from "@/lib/i18n/provider";
 import { Combobox, type ComboboxOption } from "@/components/ui/Combobox";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { Label } from "@/components/ui/Label";
 import { Button } from "@/components/ui/Button";
 
@@ -152,9 +153,8 @@ export function AddItemRow({
 
         <div>
           <Label htmlFor="item-unit">{t("items.unitLabel")}</Label>
-          <select
+          <Select
             id="item-unit"
-            className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
             value={unit}
             onChange={(event) => setUnit(event.target.value as Unit)}
           >
@@ -163,7 +163,7 @@ export function AddItemRow({
                 {t(`unit.${unitId}`)}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 

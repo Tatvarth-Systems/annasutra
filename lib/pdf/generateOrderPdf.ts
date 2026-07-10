@@ -3,6 +3,7 @@ import type { CategoryId } from "@/data/categories";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { BUSINESS } from "@/config/business";
 import { buildPdfFilename } from "@/lib/pdf/filename";
+import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 
 type TranslateFn = (
   key: string,
@@ -58,7 +59,7 @@ export async function generateOrderPdf({
   doc.text(`${t("pdf.venue")}: ${client.eventVenue}`, marginX, cursorY);
   cursorY += 16;
   doc.text(
-    `${t("pdf.date")}: ${client.eventDate}    ${t("pdf.time")}: ${client.eventTime}`,
+    `${t("pdf.date")}: ${formatDateDisplay(client.eventDate)}    ${t("pdf.time")}: ${formatTimeDisplay(client.eventTime)}`,
     marginX,
     cursorY,
   );

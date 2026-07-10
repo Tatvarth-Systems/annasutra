@@ -9,7 +9,8 @@
     "delete": "Delete",
     "undo": "Undo",
     "loading": "Loading...",
-    "optional": "optional"
+    "optional": "optional",
+    "done": "Done"
   },
   "orderSteps": {
     "client": "Client",
@@ -35,7 +36,6 @@
     "title": "Client & event details",
     "subtitle": "Who is this order for?",
     "clientName": "Client name",
-    "contactNumber": "Contact number",
     "eventType": "Event type",
     "eventVenue": "Event venue",
     "eventDate": "Event date",

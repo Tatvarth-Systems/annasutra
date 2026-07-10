@@ -4,11 +4,8 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
-  CalendarDays,
-  Clock,
   ClipboardList,
   MapPin,
-  Phone,
   StickyNote,
   Tag,
   User,
@@ -21,6 +18,9 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
+import { DateField } from "@/components/ui/DateField";
+import { TimeField } from "@/components/ui/TimeField";
 import { Label } from "@/components/ui/Label";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils/cn";
@@ -29,7 +29,6 @@ const EVENT_TYPES: EventType[] = ["wedding", "engagement", "birthday", "other"];
 
 type FormState = {
   clientName: string;
-  contactNumber: string;
   eventType: EventType | "";
   eventVenue: string;
   eventDate: string;
@@ -41,7 +40,6 @@ type FormState = {
 function toFormState(client: ClientDetails | null): FormState {
   return {
     clientName: client?.clientName ?? "",
-    contactNumber: client?.contactNumber ?? "",
     eventType: client?.eventType ?? "",
     eventVenue: client?.eventVenue ?? "",
     eventDate: client?.eventDate ?? "",
@@ -86,7 +84,6 @@ export default function ClientDetailsPage() {
 
     const details: ClientDetails = {
       clientName: form.clientName.trim(),
-      contactNumber: form.contactNumber.trim() || undefined,
       eventType: form.eventType || undefined,
       eventVenue: form.eventVenue.trim(),
       eventDate: form.eventDate,
@@ -124,45 +121,28 @@ export default function ClientDetailsPage() {
             />
           </Field>
 
-          <Field
-            label={t("client.contactNumber")}
-            htmlFor="contactNumber"
-            hint={t("common.optional")}
-          >
-            <Input
-              id="contactNumber"
-              type="tel"
-              icon={Phone}
-              value={form.contactNumber}
-              onChange={(event) => update("contactNumber", event.target.value)}
-            />
-          </Field>
-
           <div>
             <Label htmlFor="eventType">
               {t("client.eventType")}
               <span className="ml-1 text-muted">({t("common.optional")})</span>
             </Label>
-            <div className="relative">
-              <Tag className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-              <select
-                id="eventType"
-                className="w-full rounded-md border border-line bg-white py-2 pl-9 pr-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
-                value={form.eventType}
-                onChange={(event) =>
-                  update("eventType", event.target.value as EventType | "")
-                }
-              >
-                <option value=""></option>
-                {EVENT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {t(
-                      `client.eventType${type[0].toUpperCase()}${type.slice(1)}`,
-                    )}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Select
+              id="eventType"
+              icon={Tag}
+              value={form.eventType}
+              onChange={(event) =>
+                update("eventType", event.target.value as EventType | "")
+              }
+            >
+              <option value=""></option>
+              {EVENT_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {t(
+                    `client.eventType${type[0].toUpperCase()}${type.slice(1)}`,
+                  )}
+                </option>
+              ))}
+            </Select>
           </div>
 
           <Field
@@ -187,13 +167,11 @@ export default function ClientDetailsPage() {
               required
               error={errors.eventDate ? t("client.requiredError") : undefined}
             >
-              <Input
+              <DateField
                 id="eventDate"
-                type="date"
-                icon={CalendarDays}
                 value={form.eventDate}
                 invalid={errors.eventDate}
-                onChange={(event) => update("eventDate", event.target.value)}
+                onChange={(iso) => update("eventDate", iso)}
               />
             </Field>
 
@@ -203,13 +181,11 @@ export default function ClientDetailsPage() {
               required
               error={errors.eventTime ? t("client.requiredError") : undefined}
             >
-              <Input
+              <TimeField
                 id="eventTime"
-                type="time"
-                icon={Clock}
                 value={form.eventTime}
                 invalid={errors.eventTime}
-                onChange={(event) => update("eventTime", event.target.value)}
+                onChange={(hhmm) => update("eventTime", hhmm)}
               />
             </Field>
           </div>

@@ -5,7 +5,6 @@ export type EventType = "wedding" | "engagement" | "birthday" | "other";
 
 export type ClientDetails = {
   clientName: string;
-  contactNumber?: string;
   eventType?: EventType;
   eventVenue: string;
   eventDate: string;

@@ -17,6 +17,7 @@ import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { generateOrderPdf } from "@/lib/pdf/generateOrderPdf";
+import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -90,7 +91,8 @@ export default function ReviewPage() {
             {t("review.dateTime")}
           </dt>
           <dd className="text-ink">
-            {client.eventDate} · {client.eventTime}
+            {formatDateDisplay(client.eventDate)} ·{" "}
+            {formatTimeDisplay(client.eventTime)}
           </dd>
 
           <dt className="flex items-center gap-1.5 text-muted">

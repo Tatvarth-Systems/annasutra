@@ -1,5 +1,6 @@
 import { CalendarClock, MapPin } from "lucide-react";
 import type { ClientDetails } from "@/lib/order/types";
+import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 
 export function ClientSummary({ client }: { client: ClientDetails }) {
   return (
@@ -11,7 +12,8 @@ export function ClientSummary({ client }: { client: ClientDetails }) {
       </span>
       <span className="inline-flex items-center gap-1 text-muted">
         <CalendarClock className="h-3.5 w-3.5" />
-        {client.eventDate} {client.eventTime}
+        {formatDateDisplay(client.eventDate)}{" "}
+        {formatTimeDisplay(client.eventTime)}
       </span>
     </div>
   );
