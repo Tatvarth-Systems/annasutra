@@ -23,19 +23,21 @@ type AddItemRowProps = {
   onCancelEdit: () => void;
 };
 
-function createUid(): string {
+/** Generates a unique ID using crypto.randomUUID or timestamp fallback. */
+const createUid = (): string => {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-}
+};
 
-export function AddItemRow({
+/** Form for adding or editing order items. */
+export const AddItemRow = ({
   categoryId,
   items,
   editingItem,
   onSubmit,
   onCancelEdit,
-}: AddItemRowProps) {
+}: AddItemRowProps) => {
   const t = useT();
   const catalogItems = useMemo(
     () => getItemsForCategory(categoryId),
@@ -94,25 +96,28 @@ export function AddItemRow({
     }
   }
 
-  function resetForm() {
+  /** Resets form fields to initial state. */
+  const resetForm = () => {
     setItemId(null);
     setCustomName("");
     setQty("");
     setUnit(catalogItems[0]?.defaultUnit ?? "kg");
     setNote("");
     setError(null);
-  }
+  };
 
-  function handleItemChange(nextId: string) {
+  /** Updates selected item and syncs unit if applicable. */
+  const handleItemChange = (nextId: string) => {
     setItemId(nextId);
     setError(null);
     if (nextId !== CUSTOM_ITEM_ID) {
       const catalogItem = catalogItems.find((item) => item.id === nextId);
       if (catalogItem) setUnit(catalogItem.defaultUnit);
     }
-  }
+  };
 
-  function handleSubmit() {
+  /** Validates form and submits item. */
+  const handleSubmit = () => {
     if (!itemId) {
       setError(t("client.requiredError"));
       return;
@@ -144,7 +149,7 @@ export function AddItemRow({
     });
 
     resetForm();
-  }
+  };
 
   const unitConfig = getUnitInputConfig(unit);
 
@@ -217,7 +222,7 @@ export function AddItemRow({
         />
       </div>
 
-      {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
+      {error && <p className="mt-3 text-sm text-danger">{error}</p>}
 
       <div className="mt-4 flex gap-2">
         <Button type="button" onClick={handleSubmit}>
@@ -228,7 +233,7 @@ export function AddItemRow({
           )}
           {editingItem ? t("items.updateItem") : t("items.addItem")}
         </Button>
-        {editingItem ? (
+        {editingItem && (
           <Button
             type="button"
             variant="ghost"
@@ -240,8 +245,8 @@ export function AddItemRow({
             <X className="h-4 w-4" />
             {t("items.cancelEdit")}
           </Button>
-        ) : null}
+        )}
       </div>
     </div>
   );
-}
+};

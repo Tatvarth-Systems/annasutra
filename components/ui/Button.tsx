@@ -15,12 +15,13 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   danger: "bg-danger text-white hover:bg-danger/90 disabled:bg-danger/40",
 };
 
-export function Button({
+/** Button component with variant styles and standard HTML button attributes. */
+export const Button = ({
   variant = "primary",
   className,
   disabled,
   ...props
-}: ButtonProps) {
+}: ButtonProps) => {
   return (
     <button
       className={cn(
@@ -32,4 +33,4 @@ export function Button({
       {...props}
     />
   );
-}
+};

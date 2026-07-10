@@ -25,23 +25,25 @@ type TimeFieldProps = {
   placeholder?: string;
 };
 
-export function TimeField({
+/** Time picker component with hour, minute, and AM/PM selection. */
+export const TimeField = ({
   id,
   value,
   onChange,
   invalid,
   placeholder = "hh:mm AM/PM",
-}: TimeFieldProps) {
+}: TimeFieldProps) => {
   const t = useT();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    /** Closes picker when clicking outside. */
+    const handleClickOutside = (event: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -53,11 +55,12 @@ export function TimeField({
       ? 12
       : parsed.hour % 12
     : null;
-  const currentMinute = parsed ? parsed.minute : null;
+  const currentMinute = parsed && parsed.minute;
 
-  function commit(hour12: number, minute: number, period: Period) {
+  /** Commits selected time to onChange handler. */
+  const commit = (hour12: number, minute: number, period: Period) => {
     onChange(toHHMM(to24Hour(hour12, period), minute));
-  }
+  };
 
   return (
     <div ref={rootRef} className="relative">
@@ -77,7 +80,7 @@ export function TimeField({
         {value ? formatTimeDisplay(value) : placeholder}
       </button>
 
-      {open ? (
+      {open && (
         <div
           role="dialog"
           aria-label="Choose time"
@@ -150,7 +153,7 @@ export function TimeField({
             {t("common.done")}
           </button>
         </div>
-      ) : null}
+      )}
     </div>
   );
-}
+};

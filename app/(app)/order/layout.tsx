@@ -8,7 +8,8 @@ import { useT } from "@/lib/i18n/provider";
 
 const STEP_KEYS = ["client", "category", "items", "review"] as const;
 
-export default function OrderLayout({ children }: { children: ReactNode }) {
+/** Order flow layout with breadcrumb navigation and toast provider. */
+const OrderLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const t = useT();
 
@@ -31,4 +32,6 @@ export default function OrderLayout({ children }: { children: ReactNode }) {
       </main>
     </ToastProvider>
   );
-}
+};
+
+export default OrderLayout;

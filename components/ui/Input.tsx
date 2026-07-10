@@ -7,12 +7,13 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   icon?: LucideIcon;
 };
 
-export function Input({
+/** Input component with optional icon and invalid state styling. */
+export const Input = ({
   className,
   invalid,
   icon: Icon,
   ...props
-}: InputProps) {
+}: InputProps) => {
   const input = (
     <input
       className={cn(
@@ -33,4 +34,4 @@ export function Input({
       {input}
     </div>
   );
-}
+};

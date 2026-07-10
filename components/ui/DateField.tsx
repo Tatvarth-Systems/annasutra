@@ -34,13 +34,14 @@ type DateFieldProps = {
   placeholder?: string;
 };
 
-export function DateField({
+/** Date picker component with calendar view. */
+export const DateField = ({
   id,
   value,
   onChange,
   invalid,
   placeholder = "dd/mm/yyyy",
-}: DateFieldProps) {
+}: DateFieldProps) => {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const today = useMemo(() => new Date(), []);
@@ -53,39 +54,43 @@ export function DateField({
   );
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    /** Closes picker when clicking outside. */
+    const handleClickOutside = (event: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  function openPicker() {
+  /** Opens picker and sets view to current or selected date. */
+  const openPicker = () => {
     const parsed = parseISODate(value);
     setViewYear(parsed?.year ?? today.getFullYear());
     setViewMonth(parsed?.month ?? today.getMonth());
     setOpen(true);
-  }
+  };
 
-  function goPrevMonth() {
+  /** Navigates to previous month. */
+  const goPrevMonth = () => {
     if (viewMonth === 0) {
       setViewMonth(11);
       setViewYear((year) => year - 1);
     } else {
       setViewMonth((month) => month - 1);
     }
-  }
+  };
 
-  function goNextMonth() {
+  /** Navigates to next month. */
+  const goNextMonth = () => {
     if (viewMonth === 11) {
       setViewMonth(0);
       setViewYear((year) => year + 1);
     } else {
       setViewMonth((month) => month + 1);
     }
-  }
+  };
 
   const grid = useMemo(
     () => buildMonthGrid(viewYear, viewMonth),
@@ -115,7 +120,7 @@ export function DateField({
         {value ? formatDateDisplay(value) : placeholder}
       </button>
 
-      {open ? (
+      {open && (
         <div
           role="dialog"
           aria-label="Choose date"
@@ -175,7 +180,7 @@ export function DateField({
             )}
           </div>
         </div>
-      ) : null}
+      )}
     </div>
   );
-}
+};

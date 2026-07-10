@@ -21,11 +21,12 @@ export const metadata: Metadata = {
   description: "Digital Platform for Catering Services",
 };
 
-export default async function RootLayout({
+/** Root layout with locale provider and font configuration. */
+const RootLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   const cookieStore = await cookies();
   const locale = resolveLocale(cookieStore.get("as_locale")?.value);
   const messages = await getDictionary(locale);
@@ -42,4 +43,6 @@ export default async function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

@@ -12,14 +12,16 @@ type ItemsTableProps = {
   onDelete: (uid: string) => void;
 };
 
-export function ItemsTable({ items, onEdit, onDelete }: ItemsTableProps) {
+/** Table displaying order items with edit and delete actions. */
+export const ItemsTable = ({ items, onEdit, onDelete }: ItemsTableProps) => {
   const t = useT();
 
-  function labelFor(item: OrderItem): string {
+  /** Returns display label for an item. */
+  const labelFor = (item: OrderItem): string => {
     return item.itemId === CUSTOM_ITEM_ID
       ? (item.customName ?? "")
       : t(`item.${item.itemId}`);
-  }
+  };
 
   if (items.length === 0) {
     return (
@@ -60,4 +62,4 @@ export function ItemsTable({ items, onEdit, onDelete }: ItemsTableProps) {
       ))}
     </ul>
   );
-}
+};

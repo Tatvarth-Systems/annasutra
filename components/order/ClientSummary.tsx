@@ -2,7 +2,8 @@ import { CalendarClock, MapPin } from "lucide-react";
 import type { ClientDetails } from "@/lib/order/types";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 
-export function ClientSummary({ client }: { client: ClientDetails }) {
+/** Summary card displaying client details. */
+export const ClientSummary = ({ client }: { client: ClientDetails }) => {
   return (
     <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 rounded-md border border-line bg-brand-soft px-4 py-3 text-sm text-ink">
       <span className="font-medium">{client.clientName}</span>
@@ -17,4 +18,4 @@ export function ClientSummary({ client }: { client: ClientDetails }) {
       </span>
     </div>
   );
-}
+};

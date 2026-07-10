@@ -17,7 +17,8 @@ type LocaleContextValue = {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-export function LocaleProvider({
+/** Provides locale and messages context to child components. */
+export const LocaleProvider = ({
   locale,
   messages,
   children,
@@ -25,38 +26,41 @@ export function LocaleProvider({
   locale: Locale;
   messages: Messages;
   children: ReactNode;
-}) {
+}) => {
   const value = useMemo(() => ({ locale, messages }), [locale, messages]);
   return (
     <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
   );
-}
+};
 
-function lookup(messages: Messages, key: string): unknown {
+/** Looks up a nested message by dot-separated key. */
+const lookup = (messages: Messages, key: string): unknown => {
   return key.split(".").reduce<unknown>((node, part) => {
     if (node && typeof node === "object" && part in node) {
       return (node as Record<string, unknown>)[part];
     }
     return undefined;
   }, messages);
-}
+};
 
-function interpolate(
+/** Interpolates template string with variables using {name} syntax. */
+const interpolate = (
   template: string,
   vars?: Record<string, string | number>,
-): string {
+): string => {
   if (!vars) return template;
   return template.replace(/\{(\w+)\}/g, (match, name) =>
     name in vars ? String(vars[name]) : match,
   );
-}
+};
 
 export type TFunction = (
   key: string,
   vars?: Record<string, string | number>,
 ) => string;
 
-export function useT(): TFunction {
+/** Hook to access translation function within LocaleProvider. */
+export const useT = (): TFunction => {
   const context = useContext(LocaleContext);
   if (!context) {
     throw new Error("useT must be used within a LocaleProvider");
@@ -71,12 +75,13 @@ export function useT(): TFunction {
     },
     [messages],
   );
-}
+};
 
-export function useLocale(): Locale {
+/** Hook to access current locale within LocaleProvider. */
+export const useLocale = (): Locale => {
   const context = useContext(LocaleContext);
   if (!context) {
     throw new Error("useLocale must be used within a LocaleProvider");
   }
   return context.locale;
-}
+};

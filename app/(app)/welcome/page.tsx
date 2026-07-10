@@ -12,7 +12,8 @@ import {
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
-export default function WelcomePage() {
+/** Welcome page with new order button for authenticated users. */
+const WelcomePage = () => {
   const t = useT();
   const router = useRouter();
   const username = useSyncExternalStore(
@@ -40,4 +41,6 @@ export default function WelcomePage() {
       </Card>
     </main>
   );
-}
+};
+
+export default WelcomePage;

@@ -13,7 +13,8 @@ type BreadcrumbProps = {
   items: BreadcrumbItem[];
 };
 
-export function Breadcrumb({ items }: BreadcrumbProps) {
+/** Breadcrumb navigation component. */
+export const Breadcrumb = ({ items }: BreadcrumbProps) => {
   if (items.length === 0) return null;
 
   return (
@@ -36,13 +37,13 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                   {item.label}
                 </span>
               )}
-              {!isLast ? (
+              {!isLast && (
                 <ChevronRight className="h-3.5 w-3.5 shrink-0 text-line" />
-              ) : null}
+              )}
             </li>
           );
         })}
       </ol>
     </nav>
   );
-}
+};

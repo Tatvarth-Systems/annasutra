@@ -26,7 +26,8 @@ type ComboboxProps = {
   emptyText?: string;
 };
 
-export function Combobox({
+/** Searchable dropdown combobox component. */
+export const Combobox = ({
   id,
   options,
   value,
@@ -34,7 +35,7 @@ export function Combobox({
   placeholder,
   invalid,
   emptyText = "No matches",
-}: ComboboxProps) {
+}: ComboboxProps) => {
   const selected = useMemo(
     () => options.find((option) => option.id === value) ?? null,
     [options, value],
@@ -52,12 +53,13 @@ export function Combobox({
   }
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    /** Closes combobox when clicking outside. */
+    const handleClickOutside = (event: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         setOpen(false);
         setQuery(selected?.label ?? "");
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [selected]);
@@ -72,13 +74,15 @@ export function Combobox({
     return [...pinned, ...matches];
   }, [options, query]);
 
-  function selectOption(option: ComboboxOption) {
+  /** Selects an option, updates query, and closes dropdown. */
+  const selectOption = (option: ComboboxOption) => {
     onChange(option.id);
     setQuery(option.label);
     setOpen(false);
-  }
+  };
 
-  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+  /** Handles keyboard navigation and selection. */
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (!open && (event.key === "ArrowDown" || event.key === "Enter")) {
       setOpen(true);
       setActiveIndex(0);
@@ -100,7 +104,7 @@ export function Combobox({
       setOpen(false);
       setQuery(selected?.label ?? "");
     }
-  }
+  };
 
   return (
     <div ref={rootRef} className="relative">
@@ -133,7 +137,7 @@ export function Combobox({
         }}
         onKeyDown={handleKeyDown}
       />
-      {open ? (
+      {open && (
         <ul
           id={`${id}-listbox`}
           role="listbox"
@@ -165,14 +169,14 @@ export function Combobox({
                 }}
               >
                 {option.label}
-                {option.id === value ? (
+                {option.id === value && (
                   <Check className="h-4 w-4 shrink-0" />
-                ) : null}
+                )}
               </li>
             ))
           )}
         </ul>
-      ) : null}
+      )}
     </div>
   );
-}
+};

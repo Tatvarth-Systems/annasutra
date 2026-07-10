@@ -20,18 +20,20 @@ const INK_RGB: [number, number, number] = [28, 25, 23];
 const MUTED_RGB: [number, number, number] = [120, 113, 108];
 const LINE_RGB: [number, number, number] = [231, 229, 228];
 
-function eventTypeLabel(client: ClientDetails, t: TFunction): string | null {
+/** Gets event type label translation if event type is set. */
+const eventTypeLabel = (client: ClientDetails, t: TFunction): string | null => {
   if (!client.eventType) return null;
   const key = `client.eventType${client.eventType.charAt(0).toUpperCase()}${client.eventType.slice(1)}`;
   return t(key);
-}
+};
 
-export async function generateOrderPdf({
+/** Generates and downloads an order PDF with client details, items, and letterhead. */
+export const generateOrderPdf = async ({
   client,
   categoryId,
   items,
   t,
-}: GenerateOrderPdfArgs): Promise<void> {
+}: GenerateOrderPdfArgs): Promise<void> => {
   const { jsPDF } = await import("jspdf");
   const { default: autoTable } = await import("jspdf-autotable");
 
@@ -179,4 +181,4 @@ export async function generateOrderPdf({
   }
 
   doc.save(buildPdfFilename(client, categoryId, t));
-}
+};

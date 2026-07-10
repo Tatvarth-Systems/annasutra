@@ -13,7 +13,8 @@ import {
 } from "@/lib/auth/session";
 import { clearDraft } from "@/lib/order/storage";
 
-export function Navbar() {
+/** Navigation header with user menu dropdown. */
+export const Navbar = () => {
   const t = useT();
   const router = useRouter();
   const username = useSyncExternalStore(
@@ -26,21 +27,23 @@ export function Navbar() {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    /** Closes menu when clicking outside. */
+    const handleClickOutside = (event: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  function handleSignOut() {
+  /** Clears session and draft, then redirects to signin. */
+  const handleSignOut = () => {
     setOpen(false);
     clearSessionCookie();
     clearDraft();
     router.replace("/signin");
-  }
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur">
@@ -53,7 +56,7 @@ export function Navbar() {
           {t("common.appName")}
         </Link>
 
-        {username ? (
+        {username && (
           <div ref={rootRef} className="relative">
             <button
               type="button"
@@ -67,7 +70,7 @@ export function Navbar() {
               <ChevronDown className="h-4 w-4 text-muted" />
             </button>
 
-            {open ? (
+            {open && (
               <div
                 role="menu"
                 className="absolute right-0 mt-2 w-48 overflow-hidden rounded-md border border-line bg-white py-1 shadow-lg"
@@ -85,10 +88,10 @@ export function Navbar() {
                   {t("auth.signOut")}
                 </button>
               </div>
-            ) : null}
+            )}
           </div>
-        ) : null}
+        )}
       </div>
     </header>
   );
-}
+};

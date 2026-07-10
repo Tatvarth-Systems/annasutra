@@ -3,20 +3,22 @@ import type { CategoryId } from "@/data/categories";
 import type { TFunction } from "@/lib/i18n/provider";
 import { formatDateDisplay } from "@/lib/utils/date";
 
-function toFilenameSegment(text: string): string {
+/** Converts text to CamelCase filename-safe segment. */
+const toFilenameSegment = (text: string): string => {
   return text
     .trim()
     .split(/[^a-zA-Z0-9]+/)
     .filter(Boolean)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join("");
-}
+};
 
-export function buildPdfFilename(
+/** Builds PDF filename from client details, category, and translation function. */
+export const buildPdfFilename = (
   client: ClientDetails,
   categoryId: CategoryId,
   t: TFunction,
-): string {
+): string => {
   const dateSegment = formatDateDisplay(client.eventDate).replace(/\//g, "-");
   const clientSegment = toFilenameSegment(client.clientName);
   const eventTypeSegment = client.eventType
@@ -36,4 +38,4 @@ export function buildPdfFilename(
   ].filter(Boolean);
 
   return `${parts.join("_")}.pdf`;
-}
+};

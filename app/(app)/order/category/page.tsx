@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/Button";
 import { CategoryCard } from "@/components/order/CategoryCard";
 import { ClientSummary } from "@/components/order/ClientSummary";
 
-export default function CategoryPage() {
+/** Category selection page with redirect to client page if no client. */
+const CategoryPage = () => {
   const t = useT();
   const router = useRouter();
   const { client, categoryId, setCategory, startNewClient } = useOrderDraft();
@@ -25,15 +26,17 @@ export default function CategoryPage() {
 
   if (!client) return null;
 
-  function handleSelect(id: (typeof CATEGORIES)[number]["id"]) {
+  /** Sets category and navigates to items page. */
+  const handleSelect = (id: (typeof CATEGORIES)[number]["id"]) => {
     setCategory(id);
     router.push("/order/items");
-  }
+  };
 
-  function handleNewClient() {
+  /** Clears draft and returns to client entry. */
+  const handleNewClient = () => {
     startNewClient();
     router.push("/order/client");
-  }
+  };
 
   return (
     <div>
@@ -64,4 +67,6 @@ export default function CategoryPage() {
       </div>
     </div>
   );
-}
+};
+
+export default CategoryPage;

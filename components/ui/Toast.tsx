@@ -30,10 +30,12 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 const AUTO_DISMISS_MS = 5000;
 
-export function ToastProvider({ children }: { children: ReactNode }) {
+/** Toast notification provider and container component. */
+export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const nextId = useRef(0);
 
+  /** Shows a toast notification with optional action button. */
   const showToast = useCallback((text: string, action?: ToastAction) => {
     const id = nextId.current++;
     setToasts((current) => [...current, { id, text, action }]);
@@ -42,6 +44,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     }, AUTO_DISMISS_MS);
   }, []);
 
+  /** Dismisses a toast by ID. */
   const dismiss = useCallback((id: number) => {
     setToasts((current) => current.filter((toast) => toast.id !== id));
   }, []);
@@ -59,7 +62,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           >
             <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-soft" />
             <span>{toast.text}</span>
-            {toast.action ? (
+            {toast.action && (
               <button
                 className="font-medium text-brand-soft underline underline-offset-2"
                 onClick={() => {
@@ -69,7 +72,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               >
                 {toast.action.label}
               </button>
-            ) : null}
+            )}
             <button
               className="shrink-0 text-white/70 hover:text-white"
               aria-label="Dismiss"
@@ -82,12 +85,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       </div>
     </ToastContext.Provider>
   );
-}
+};
 
-export function useToast(): ToastContextValue {
+/** Hook to access toast context notifications. */
+export const useToast = (): ToastContextValue => {
   const context = useContext(ToastContext);
   if (!context) {
     throw new Error("useToast must be used within a ToastProvider");
   }
   return context;
-}
+};

@@ -37,7 +37,8 @@ type FormState = {
   notes: string;
 };
 
-function toFormState(client: ClientDetails | null): FormState {
+/** Converts ClientDetails to form state or returns empty form. */
+const toFormState = (client: ClientDetails | null): FormState => {
   return {
     clientName: client?.clientName ?? "",
     eventType: client?.eventType ?? "",
@@ -47,9 +48,10 @@ function toFormState(client: ClientDetails | null): FormState {
     guestCount: client?.guestCount ? String(client.guestCount) : "",
     notes: client?.notes ?? "",
   };
-}
+};
 
-export default function ClientDetailsPage() {
+/** Client details entry form with validation. */
+const ClientDetailsPage = () => {
   const t = useT();
   const router = useRouter();
   const { client, setClientDetails } = useOrderDraft();
@@ -65,12 +67,14 @@ export default function ClientDetailsPage() {
     setForm(toFormState(client));
   }
 
-  function update<K extends keyof FormState>(key: K, value: FormState[K]) {
+  /** Updates a form field and clears its error. */
+  const update = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: false }));
-  }
+  };
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  /** Validates form fields and submits client details. */
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const nextErrors: Partial<Record<keyof FormState, boolean>> = {
@@ -94,7 +98,7 @@ export default function ClientDetailsPage() {
 
     setClientDetails(details);
     router.push("/order/category");
-  }
+  };
 
   return (
     <div>
@@ -232,4 +236,6 @@ export default function ClientDetailsPage() {
       </Card>
     </div>
   );
-}
+};
+
+export default ClientDetailsPage;
