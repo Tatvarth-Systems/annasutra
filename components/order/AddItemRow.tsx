@@ -83,7 +83,11 @@ export const AddItemRow = ({
   const [qty, setQty] = useState("");
   const [unit, setUnit] = useState<Unit>(catalogItems[0]?.defaultUnit ?? "kg");
   const [note, setNote] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{
+    itemId?: boolean;
+    qty?: boolean;
+    customName?: string;
+  }>({});
 
   const [prevEditingItem, setPrevEditingItem] = useState(editingItem);
   if (editingItem !== prevEditingItem) {
@@ -94,7 +98,7 @@ export const AddItemRow = ({
       setQty(String(editingItem.qty));
       setUnit(editingItem.unit);
       setNote(editingItem.note ?? "");
-      setError(null);
+      setErrors({});
     }
   }
 
@@ -105,13 +109,17 @@ export const AddItemRow = ({
     setQty("");
     setUnit(catalogItems[0]?.defaultUnit ?? "kg");
     setNote("");
-    setError(null);
+    setErrors({});
   };
 
   /** Updates selected item and syncs unit if applicable. */
   const handleItemChange = (nextId: string) => {
     setItemId(nextId);
-    setError(null);
+    setErrors((prev) => ({
+      ...prev,
+      itemId: undefined,
+      customName: undefined,
+    }));
     if (nextId !== CUSTOM_ITEM_ID) {
       const catalogItem = catalogItems.find((item) => item.id === nextId);
       if (catalogItem) setUnit(catalogItem.defaultUnit);
@@ -120,24 +128,27 @@ export const AddItemRow = ({
 
   /** Validates form and submits item. */
   const handleSubmit = () => {
+    const nextErrors: { itemId?: boolean; qty?: boolean; customName?: string } =
+      {};
+
     if (!itemId) {
-      setError(t("client.requiredError"));
-      return;
+      nextErrors.itemId = true;
     }
     if (itemId === CUSTOM_ITEM_ID) {
       const trimmedName = customName.trim();
       if (trimmedName === "") {
-        setError(t("client.requiredError"));
-        return;
-      }
-      if (usedLabels.has(trimmedName.toLowerCase())) {
-        setError(t("items.duplicateNameError"));
-        return;
+        nextErrors.customName = t("client.requiredError");
+      } else if (usedLabels.has(trimmedName.toLowerCase())) {
+        nextErrors.customName = t("items.duplicateNameError");
       }
     }
     const parsedQty = Number(qty);
     if (!qty || Number.isNaN(parsedQty) || parsedQty <= 0) {
-      setError(t("client.requiredError"));
+      nextErrors.qty = true;
+    }
+
+    if (Object.keys(nextErrors).length > 0 || !itemId) {
+      setErrors(nextErrors);
       return;
     }
 
@@ -158,7 +169,12 @@ export const AddItemRow = ({
   return (
     <div className="rounded-lg border border-line bg-white p-4">
       <div className="grid gap-3 sm:grid-cols-[2fr_1fr_1fr]">
-        <Field label={t("items.itemLabel")} htmlFor="item-combobox" required>
+        <Field
+          label={t("items.itemLabel")}
+          htmlFor="item-combobox"
+          required
+          error={errors.itemId ? t("client.requiredError") : undefined}
+        >
           <Combobox
             id="item-combobox"
             options={options}
@@ -168,14 +184,22 @@ export const AddItemRow = ({
           />
         </Field>
 
-        <Field label={t("items.qtyLabel")} htmlFor="item-qty" required>
+        <Field
+          label={t("items.qtyLabel")}
+          htmlFor="item-qty"
+          required
+          error={errors.qty ? t("client.requiredError") : undefined}
+        >
           <Input
             id="item-qty"
             type="number"
             min={unitConfig.min}
             step={unitConfig.step}
             value={qty}
-            onChange={(event) => setQty(event.target.value)}
+            onChange={(event) => {
+              setQty(event.target.value);
+              setErrors((prev) => ({ ...prev, qty: undefined }));
+            }}
           />
         </Field>
 
@@ -201,11 +225,15 @@ export const AddItemRow = ({
             label={t("items.customNameLabel")}
             htmlFor="item-custom-name"
             required
+            error={errors.customName}
           >
             <Input
               id="item-custom-name"
               value={customName}
-              onChange={(event) => setCustomName(event.target.value)}
+              onChange={(event) => {
+                setCustomName(event.target.value);
+                setErrors((prev) => ({ ...prev, customName: undefined }));
+              }}
             />
           </Field>
         </div>
@@ -223,8 +251,6 @@ export const AddItemRow = ({
           onChange={(event) => setNote(event.target.value)}
         />
       </div>
-
-      {error && <p className="mt-3 text-sm text-danger">{error}</p>}
 
       <div className="mt-4 flex gap-2">
         <Button type="button" onClick={handleSubmit}>

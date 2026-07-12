@@ -53,7 +53,10 @@ const CategoryPage = () => {
         }
       />
 
-      <ClientSummary client={client} />
+      <ClientSummary
+        client={client}
+        onEdit={() => router.push("/order/client")}
+      />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {CATEGORIES.map((category) => (

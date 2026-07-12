@@ -26,6 +26,7 @@ import { TimeField } from "@/components/ui/TimeField";
 import { useT } from "@/lib/i18n/provider";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { cn } from "@/lib/utils/cn";
+import { getNowHHMM, getTodayIso } from "@/lib/utils/date";
 
 const EVENT_TYPES: EventType[] = ["wedding", "engagement", "birthday", "other"];
 
@@ -83,7 +84,9 @@ const ClientDetailsPage = () => {
       clientName: form.clientName.trim() === "",
       eventVenue: form.eventVenue.trim() === "",
       eventDate: form.eventDate.trim() === "",
-      eventTime: form.eventTime.trim() === "",
+      eventTime:
+        form.eventTime.trim() === "" ||
+        (form.eventDate === getTodayIso() && form.eventTime < getNowHHMM()),
     };
     setErrors(nextErrors);
     if (Object.values(nextErrors).some(Boolean)) return;
@@ -166,7 +169,7 @@ const ClientDetailsPage = () => {
             />
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field
               label={t("client.eventDate")}
               htmlFor="eventDate"
@@ -185,13 +188,22 @@ const ClientDetailsPage = () => {
               label={t("client.eventTime")}
               htmlFor="eventTime"
               required
-              error={errors.eventTime ? t("client.requiredError") : undefined}
+              error={
+                errors.eventTime
+                  ? form.eventTime.trim() === ""
+                    ? t("client.requiredError")
+                    : t("client.pastTimeError")
+                  : undefined
+              }
             >
               <TimeField
                 id="eventTime"
                 value={form.eventTime}
                 invalid={errors.eventTime}
                 onChange={(hhmm) => update("eventTime", hhmm)}
+                minHHMM={
+                  form.eventDate === getTodayIso() ? getNowHHMM() : undefined
+                }
               />
             </Field>
           </div>

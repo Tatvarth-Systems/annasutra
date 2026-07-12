@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils/cn";
 import {
   buildMonthGrid,
   formatDateDisplay,
+  getTodayIso,
   parseISODate,
-  toISODate,
 } from "@/lib/utils/date";
 
 const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -97,11 +97,7 @@ export const DateField = ({
     () => buildMonthGrid(viewYear, viewMonth),
     [viewYear, viewMonth],
   );
-  const todayIso = toISODate(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-  );
+  const todayIso = getTodayIso();
 
   return (
     <div ref={rootRef} className="relative">
@@ -155,30 +151,33 @@ export const DateField = ({
             ))}
           </div>
           <div className="mt-1 grid grid-cols-7 gap-1">
-            {grid.map((cell, index) =>
-              cell ? (
+            {grid.map((cell, index) => {
+              if (!cell) return <span key={`empty-${index}`} />;
+              const isPast = cell.iso < todayIso;
+              return (
                 <button
                   key={cell.iso}
                   type="button"
+                  disabled={isPast}
                   onClick={() => {
                     onChange(cell.iso);
                     setOpen(false);
                   }}
                   className={cn(
                     "flex h-8 w-8 items-center justify-center rounded-full text-sm",
-                    cell.iso === value
-                      ? "bg-brand text-white"
-                      : cell.iso === todayIso
-                        ? "border border-brand text-brand"
-                        : "text-ink hover:bg-brand-soft",
+                    isPast
+                      ? "cursor-not-allowed text-muted/40"
+                      : cell.iso === value
+                        ? "bg-brand text-white"
+                        : cell.iso === todayIso
+                          ? "border border-brand text-brand"
+                          : "text-ink hover:bg-brand-soft",
                   )}
                 >
                   {cell.day}
                 </button>
-              ) : (
-                <span key={`empty-${index}`} />
-              ),
-            )}
+              );
+            })}
           </div>
         </div>
       )}
