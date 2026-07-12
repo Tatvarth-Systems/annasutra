@@ -27,7 +27,13 @@ const LINE_RGB: [number, number, number] = [231, 229, 228];
 
 const FONT_FAMILY = "NotoSansDevanagari";
 
-/** Registers Noto Sans Devanagari (covers Latin + Devanagari) so both locales render correctly. */
+/**
+ * Registers Noto Sans Devanagari for autotable's column width/wrap math in mr mode only.
+ * jsPDF's own vector text renderer mis-parses this font's Latin glyphs (digits/# render,
+ * letters don't) — a jsPDF TTF-parsing quirk, not a shaping issue — so actual painted text
+ * always uses "helvetica" for en and rasterized canvas images for mr; this font is never
+ * used to paint a visible glyph directly via doc.text().
+ */
 const registerFont = async (doc: import("jspdf").jsPDF): Promise<void> => {
   const { NOTO_SANS_DEVANAGARI_REGULAR, NOTO_SANS_DEVANAGARI_BOLD } =
     await import("@/lib/pdf/fonts/notoSansDevanagari");
@@ -62,7 +68,7 @@ const drawText = (
   align: Align = "left",
 ): void => {
   if (locale !== "mr") {
-    doc.setFont(FONT_FAMILY, weight);
+    doc.setFont("helvetica", weight);
     doc.setFontSize(fontSize);
     doc.setTextColor(...color);
     doc.text(text, x, y, { align });
@@ -101,20 +107,22 @@ export const generateOrderPdf = async ({
   const { default: autoTable } = await import("jspdf-autotable");
 
   const doc = new jsPDF({ unit: "pt", format: "a4" });
-  await registerFont(doc);
-  if (locale === "mr") await ensureCanvasFontLoaded();
+  if (locale === "mr") {
+    await registerFont(doc);
+    await ensureCanvasFontLoaded();
+  }
   const pageWidth = doc.internal.pageSize.getWidth();
   const marginX = 40;
   let cursorY = 48;
 
-  // Letterhead
-  doc.setFont(FONT_FAMILY, "bold");
+  // Letterhead (always Latin — business name/address, not translated)
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
   doc.setTextColor(...BRAND_RGB);
   doc.text(BUSINESS.name, marginX, cursorY);
   cursorY += 16;
 
-  doc.setFont(FONT_FAMILY, "normal");
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(...MUTED_RGB);
   doc.text(`${BUSINESS.proprietor} · ${BUSINESS.address}`, marginX, cursorY);
@@ -237,10 +245,14 @@ export const generateOrderPdf = async ({
     headStyles: {
       fillColor: BRAND_RGB,
       textColor: [255, 255, 255],
-      font: FONT_FAMILY,
+      font: locale === "mr" ? FONT_FAMILY : "helvetica",
       fontStyle: "bold",
     },
-    styles: { fontSize: 10, textColor: INK_RGB, font: FONT_FAMILY },
+    styles: {
+      fontSize: 10,
+      textColor: INK_RGB,
+      font: locale === "mr" ? FONT_FAMILY : "helvetica",
+    },
     alternateRowStyles: { fillColor: STRIPE_RGB },
     // font/styles above still drive autotable's own width/wrap math (glyph metrics are
     // fine, only visual shaping is broken) — willDrawCell/didDrawCell below swap the
