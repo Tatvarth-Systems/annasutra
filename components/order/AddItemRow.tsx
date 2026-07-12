@@ -193,6 +193,7 @@ export const AddItemRow = ({
         >
           <NumberField
             id="item-qty"
+            aria-label={t("items.qtyLabel")}
             minValue={unitConfig.min}
             step={unitConfig.step}
             value={qty}

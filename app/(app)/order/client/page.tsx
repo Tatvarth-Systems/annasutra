@@ -216,6 +216,7 @@ const ClientDetailsPage = () => {
           >
             <NumberField
               id="guestCount"
+              aria-label={t("client.guestCount")}
               minValue={0}
               icon={Users}
               value={form.guestCount}

@@ -18,6 +18,7 @@ type NumberFieldProps = {
   maxValue?: number;
   step?: number;
   invalid?: boolean;
+  "aria-label": string;
 };
 
 /** Numeric input that accepts both Latin and locale-native digits (e.g. Devanagari in mr), via react-aria's NumberField. */
@@ -30,19 +31,21 @@ export const NumberField = ({
   maxValue,
   step,
   invalid,
+  "aria-label": ariaLabel,
 }: NumberFieldProps) => {
   const field = (
     <AriaNumberField
-      id={id}
       value={value ?? NaN}
       onChange={(next) => onChange(Number.isNaN(next) ? undefined : next)}
       minValue={minValue}
       maxValue={maxValue}
       step={step}
       isInvalid={invalid}
+      aria-label={ariaLabel}
     >
       <Group className="block">
         <AriaInput
+          id={id}
           className={cn(
             "w-full rounded-md border bg-white px-3 py-2 text-sm text-ink placeholder:text-muted focus:ring-2 focus:ring-brand/40 focus:outline-none",
             Icon && "pl-9",
