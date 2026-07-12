@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { CREDENTIALS } from "@/config/credentials";
 import { writeSessionCookie } from "@/lib/auth/session";
 import { useT } from "@/lib/i18n/provider";
@@ -63,14 +64,15 @@ const SignInPage = () => {
           </Field>
 
           <Field label={t("auth.password")} htmlFor="password" required>
-            <Input
+            <PasswordInput
               id="password"
               name="password"
-              type="password"
               autoComplete="current-password"
               icon={Lock}
               value={password}
               invalid={error}
+              showLabel={t("auth.showPassword")}
+              hideLabel={t("auth.hidePassword")}
               onChange={(event) => {
                 setPassword(event.target.value);
                 setError(false);

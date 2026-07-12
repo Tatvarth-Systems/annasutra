@@ -25,7 +25,9 @@
     "password": "Password",
     "signIn": "Sign in",
     "invalidCredentials": "Incorrect username or password",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "welcome": {
     "greeting": "Welcome, {name}",

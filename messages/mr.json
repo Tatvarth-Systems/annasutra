@@ -25,7 +25,9 @@
     "password": "पासवर्ड",
     "signIn": "साइन इन",
     "invalidCredentials": "चुकीचे वापरकर्तानाव किंवा पासवर्ड",
-    "signOut": "साइन आउट"
+    "signOut": "साइन आउट",
+    "showPassword": "पासवर्ड दाखवा",
+    "hidePassword": "पासवर्ड लपवा"
   },
   "welcome": {
     "greeting": "नमस्कार, {name}",
