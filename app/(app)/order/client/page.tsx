@@ -20,6 +20,7 @@ import { DateField } from "@/components/ui/DateField";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
+import { NumberField } from "@/components/ui/NumberField";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Select } from "@/components/ui/Select";
 import { TimeField } from "@/components/ui/TimeField";
@@ -36,7 +37,7 @@ type FormState = {
   eventVenue: string;
   eventDate: string;
   eventTime: string;
-  guestCount: string;
+  guestCount: number | undefined;
   notes: string;
 };
 
@@ -48,7 +49,7 @@ const toFormState = (client: ClientDetails | null): FormState => {
     eventVenue: client?.eventVenue ?? "",
     eventDate: client?.eventDate ?? "",
     eventTime: client?.eventTime ?? "",
-    guestCount: client?.guestCount ? String(client.guestCount) : "",
+    guestCount: client?.guestCount,
     notes: client?.notes ?? "",
   };
 };
@@ -97,7 +98,7 @@ const ClientDetailsPage = () => {
       eventVenue: form.eventVenue.trim(),
       eventDate: form.eventDate,
       eventTime: form.eventTime,
-      guestCount: form.guestCount ? Number(form.guestCount) : undefined,
+      guestCount: form.guestCount,
       notes: form.notes.trim() || undefined,
     };
 
@@ -213,13 +214,12 @@ const ClientDetailsPage = () => {
             htmlFor="guestCount"
             hint={t("common.optional")}
           >
-            <Input
+            <NumberField
               id="guestCount"
-              type="number"
-              min={0}
+              minValue={0}
               icon={Users}
               value={form.guestCount}
-              onChange={(event) => update("guestCount", event.target.value)}
+              onChange={(next) => update("guestCount", next)}
             />
           </Field>
 

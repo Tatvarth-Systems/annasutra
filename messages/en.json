@@ -25,7 +25,9 @@
     "password": "Password",
     "signIn": "Sign in",
     "invalidCredentials": "Incorrect username or password",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "welcome": {
     "greeting": "Welcome, {name}",
@@ -47,7 +49,9 @@
     "eventTypeBirthday": "Birthday",
     "eventTypeOther": "Other",
     "requiredError": "This field is required",
-    "pastTimeError": "This time has already passed"
+    "pastTimeError": "This time has already passed",
+    "am": "AM",
+    "pm": "PM"
   },
   "category": {
     "title": "Select a category",
@@ -112,6 +116,10 @@
     "columnUnit": "Unit",
     "columnNote": "Note",
     "generatedOn": "Generated on {date}"
+  },
+  "footer": {
+    "poweredBy": "Powered by {name}",
+    "copyright": "© {year} All rights reserved."
   },
   "unit": {
     "kg": "kg",

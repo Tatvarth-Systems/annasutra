@@ -25,7 +25,9 @@
     "password": "पासवर्ड",
     "signIn": "साइन इन",
     "invalidCredentials": "चुकीचे वापरकर्तानाव किंवा पासवर्ड",
-    "signOut": "साइन आउट"
+    "signOut": "साइन आउट",
+    "showPassword": "पासवर्ड दाखवा",
+    "hidePassword": "पासवर्ड लपवा"
   },
   "welcome": {
     "greeting": "नमस्कार, {name}",
@@ -47,7 +49,9 @@
     "eventTypeBirthday": "वाढदिवस",
     "eventTypeOther": "इतर",
     "requiredError": "हे क्षेत्र आवश्यक आहे",
-    "pastTimeError": "ही वेळ आधीच उलटून गेली आहे"
+    "pastTimeError": "ही वेळ आधीच उलटून गेली आहे",
+    "am": "AM",
+    "pm": "PM"
   },
   "category": {
     "title": "वर्ग निवडा",
@@ -112,6 +116,10 @@
     "columnUnit": "एकक",
     "columnNote": "टीप",
     "generatedOn": "{date} रोजी तयार केले"
+  },
+  "footer": {
+    "poweredBy": "{name} द्वारा समर्थित",
+    "copyright": "© {year} सर्व हक्क राखीव."
   },
   "unit": {
     "kg": "किलो",

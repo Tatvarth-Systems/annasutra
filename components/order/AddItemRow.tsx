@@ -12,6 +12,7 @@ import { Combobox } from "@/components/ui/Combobox";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
+import { NumberField } from "@/components/ui/NumberField";
 import { Select } from "@/components/ui/Select";
 import { CUSTOM_ITEM_ID, getItemsForCategory } from "@/data/catalog";
 import { getUnitInputConfig, UNIT_IDS } from "@/data/units";
@@ -81,7 +82,7 @@ export const AddItemRow = ({
 
   const [itemId, setItemId] = useState<string | null>(null);
   const [customName, setCustomName] = useState("");
-  const [qty, setQty] = useState("");
+  const [qty, setQty] = useState<number | undefined>(undefined);
   const [unit, setUnit] = useState<Unit>(catalogItems[0]?.defaultUnit ?? "kg");
   const [note, setNote] = useState("");
   const [errors, setErrors] = useState<{
@@ -96,7 +97,7 @@ export const AddItemRow = ({
     if (editingItem) {
       setItemId(editingItem.itemId);
       setCustomName(editingItem.customName ?? "");
-      setQty(String(editingItem.qty));
+      setQty(editingItem.qty);
       setUnit(editingItem.unit);
       setNote(editingItem.note ?? "");
       setErrors({});
@@ -107,7 +108,7 @@ export const AddItemRow = ({
   const resetForm = () => {
     setItemId(null);
     setCustomName("");
-    setQty("");
+    setQty(undefined);
     setUnit(catalogItems[0]?.defaultUnit ?? "kg");
     setNote("");
     setErrors({});
@@ -143,12 +144,11 @@ export const AddItemRow = ({
         nextErrors.customName = t("items.duplicateNameError");
       }
     }
-    const parsedQty = Number(qty);
-    if (!qty || Number.isNaN(parsedQty) || parsedQty <= 0) {
+    if (qty === undefined || qty <= 0) {
       nextErrors.qty = true;
     }
 
-    if (Object.keys(nextErrors).length > 0 || !itemId) {
+    if (Object.keys(nextErrors).length > 0 || !itemId || qty === undefined) {
       setErrors(nextErrors);
       return;
     }
@@ -157,7 +157,7 @@ export const AddItemRow = ({
       uid: editingItem?.uid ?? createUid(),
       itemId,
       customName: itemId === CUSTOM_ITEM_ID ? customName.trim() : undefined,
-      qty: parsedQty,
+      qty,
       unit,
       note: note.trim() || undefined,
     });
@@ -191,14 +191,14 @@ export const AddItemRow = ({
           required
           error={errors.qty ? t("client.requiredError") : undefined}
         >
-          <Input
+          <NumberField
             id="item-qty"
-            type="number"
-            min={unitConfig.min}
+            minValue={unitConfig.min}
             step={unitConfig.step}
             value={qty}
-            onChange={(event) => {
-              setQty(event.target.value);
+            invalid={errors.qty}
+            onChange={(next) => {
+              setQty(next);
               setErrors((prev) => ({ ...prev, qty: undefined }));
             }}
           />

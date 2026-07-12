@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/config";
 import type { TFunction } from "@/lib/i18n/provider";
 import type { ClientDetails, OrderItem } from "@/lib/order/types";
 
-import { BUSINESS } from "@/config/business";
+import { BUSINESS, BUSINESS_PHONES } from "@/config/business";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { toLocaleDigits } from "@/lib/i18n/numerals";
 import { buildPdfFilename } from "@/lib/pdf/filename";
@@ -16,6 +16,7 @@ type GenerateOrderPdfArgs = {
   items: OrderItem[];
   t: TFunction;
   locale: Locale;
+  iosWindow?: Window | null;
 };
 
 const BRAND_RGB: [number, number, number] = [194, 65, 12];
@@ -102,6 +103,7 @@ export const generateOrderPdf = async ({
   items,
   t,
   locale,
+  iosWindow,
 }: GenerateOrderPdfArgs): Promise<void> => {
   const { jsPDF } = await import("jspdf");
   const { default: autoTable } = await import("jspdf-autotable");
@@ -115,19 +117,32 @@ export const generateOrderPdf = async ({
   const marginX = 40;
   let cursorY = 48;
 
-  // Letterhead (always Latin — business name/address, not translated)
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
-  doc.setTextColor(...BRAND_RGB);
-  doc.text(BUSINESS.name, marginX, cursorY);
+  // Letterhead (localized: Latin vector text for en, rasterized Devanagari for mr)
+  const business = BUSINESS[locale];
+  drawText(doc, locale, business.name, marginX, cursorY, 18, "bold", BRAND_RGB);
   cursorY += 16;
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(...MUTED_RGB);
-  doc.text(`${BUSINESS.proprietor} · ${BUSINESS.address}`, marginX, cursorY);
+  drawText(
+    doc,
+    locale,
+    `${business.proprietor} · ${business.address}`,
+    marginX,
+    cursorY,
+    9,
+    "normal",
+    MUTED_RGB,
+  );
   cursorY += 13;
-  doc.text(BUSINESS.phones.join(" / "), marginX, cursorY);
+  drawText(
+    doc,
+    locale,
+    toLocaleDigits(BUSINESS_PHONES.join(" / "), locale),
+    marginX,
+    cursorY,
+    9,
+    "normal",
+    MUTED_RGB,
+  );
   cursorY += 18;
 
   doc.setDrawColor(...LINE_RGB);
@@ -337,5 +352,25 @@ export const generateOrderPdf = async ({
     );
   }
 
-  doc.save(buildPdfFilename(client, categoryId, t));
+  const filename = buildPdfFilename(client, categoryId, t, locale);
+
+  if (iosWindow) {
+    // iOS/iPadOS WebKit ignores the download attribute on blob URLs (still-open WebKit
+    // bug: https://bugs.webkit.org/show_bug.cgi?id=167341). Data URIs survive navigation
+    // and render in Safari's built-in PDF viewer, where the user can Share > Save to
+    // Files. Filename isn't preserved this way — accepted tradeoff.
+    iosWindow.location.href = doc.output("datauristring");
+    return;
+  }
+
+  const blobUrl = URL.createObjectURL(doc.output("blob"));
+  const anchor = document.createElement("a");
+  anchor.href = blobUrl;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  // Revoking immediately races the browser's async download handoff and can invalidate
+  // the blob before the download starts; delay it (matches FileSaver.js's own 40s precedent).
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 40000);
 };
