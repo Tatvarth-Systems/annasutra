@@ -74,19 +74,27 @@ const ItemsPage = () => {
 
       <ClientSummary client={client} />
 
-      <AddItemRow
-        categoryId={categoryId}
-        items={items}
-        editingItem={editingItem}
-        onSubmit={handleSubmitItem}
-        onCancelEdit={() => setEditingItem(null)}
-      />
+      <div>
+        <h2 className="text-base font-semibold text-ink">
+          {t("items.listTitle")}
+        </h2>
+        <p className="mt-1 text-sm text-muted">{t("items.listSubtitle")}</p>
+        <div className="mt-3">
+          <ItemsTable
+            items={items}
+            onEdit={setEditingItem}
+            onDelete={handleDelete}
+          />
+        </div>
+      </div>
 
       <div className="mt-6">
-        <ItemsTable
+        <AddItemRow
+          categoryId={categoryId}
           items={items}
-          onEdit={setEditingItem}
-          onDelete={handleDelete}
+          editingItem={editingItem}
+          onSubmit={handleSubmitItem}
+          onCancelEdit={() => setEditingItem(null)}
         />
       </div>
 

@@ -12,11 +12,13 @@ import { Input } from "@/components/ui/Input";
 import { CREDENTIALS } from "@/config/credentials";
 import { writeSessionCookie } from "@/lib/auth/session";
 import { useT } from "@/lib/i18n/provider";
+import { useOrderDraft } from "@/lib/order/useOrderDraft";
 
 /** Sign in page with username and password form. */
 const SignInPage = () => {
   const t = useT();
   const router = useRouter();
+  const { startNewClient } = useOrderDraft();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
@@ -29,6 +31,7 @@ const SignInPage = () => {
       username === CREDENTIALS.username &&
       password === CREDENTIALS.password
     ) {
+      startNewClient();
       writeSessionCookie(username);
       router.replace("/welcome");
       return;

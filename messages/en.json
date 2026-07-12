@@ -46,12 +46,14 @@
     "eventTypeEngagement": "Engagement",
     "eventTypeBirthday": "Birthday",
     "eventTypeOther": "Other",
-    "requiredError": "This field is required"
+    "requiredError": "This field is required",
+    "pastTimeError": "This time has already passed"
   },
   "category": {
     "title": "Select a category",
     "subtitle": "Order for {name}",
     "newClient": "New client",
+    "editClient": "Edit client",
     "vegetables": "Vegetables",
     "fruits": "Fruits",
     "dairy": "Dairy",
@@ -73,6 +75,8 @@
     "qtyLabel": "Quantity",
     "unitLabel": "Unit",
     "noteLabel": "Note",
+    "listTitle": "Items in this order",
+    "listSubtitle": "Everything you've added so far. Edit or remove items, or add more below.",
     "addItem": "Add item",
     "updateItem": "Update item",
     "cancelEdit": "Cancel edit",

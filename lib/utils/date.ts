@@ -82,3 +82,15 @@ export const to24Hour = (hour12: number, period: "AM" | "PM"): number => {
   if (period === "AM") return hour12 === 12 ? 0 : hour12;
   return hour12 === 12 ? 12 : hour12 + 12;
 };
+
+/** Returns today's date as an ISO date string (yyyy-mm-dd). */
+export const getTodayIso = (): ISODate => {
+  const now = new Date();
+  return toISODate(now.getFullYear(), now.getMonth(), now.getDate());
+};
+
+/** Returns the current time as an HH:mm string. */
+export const getNowHHMM = (): HHMM => {
+  const now = new Date();
+  return toHHMM(now.getHours(), now.getMinutes());
+};
