@@ -117,6 +117,10 @@
     "columnNote": "Note",
     "generatedOn": "Generated on {date}"
   },
+  "footer": {
+    "poweredBy": "Powered by {name}",
+    "copyright": "© {year} All rights reserved."
+  },
   "unit": {
     "kg": "kg",
     "g": "g",

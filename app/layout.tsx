@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 
+import { Footer } from "@/components/layout/Footer";
 import { resolveLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { LocaleProvider } from "@/lib/i18n/provider";
@@ -40,7 +41,8 @@ const RootLayout = async ({
     >
       <body className="flex min-h-full flex-col bg-surface text-ink">
         <LocaleProvider locale={locale} messages={messages}>
-          {children}
+          <div className="flex flex-1 flex-col">{children}</div>
+          <Footer />
         </LocaleProvider>
       </body>
     </html>

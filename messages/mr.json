@@ -117,6 +117,10 @@
     "columnNote": "टीप",
     "generatedOn": "{date} रोजी तयार केले"
   },
+  "footer": {
+    "poweredBy": "{name} द्वारा समर्थित",
+    "copyright": "© {year} सर्व हक्क राखीव."
+  },
   "unit": {
     "kg": "किलो",
     "g": "ग्रॅम",
