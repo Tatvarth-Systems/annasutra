@@ -356,10 +356,14 @@ export const generateOrderPdf = async ({
 
   if (iosWindow) {
     // iOS/iPadOS WebKit ignores the download attribute on blob URLs (still-open WebKit
-    // bug: https://bugs.webkit.org/show_bug.cgi?id=167341). Data URIs survive navigation
-    // and render in Safari's built-in PDF viewer, where the user can Share > Save to
-    // Files. Filename isn't preserved this way — accepted tradeoff.
-    iosWindow.location.href = doc.output("datauristring");
+    // bug: https://bugs.webkit.org/show_bug.cgi?id=167341), so a plain navigation is used
+    // instead. Safari 14+ blocks top-level JS navigation to data: URLs (anti-phishing),
+    // which is why that was blank; blob: URLs aren't subject to that block and render
+    // fine here, letting the user Share > Save to Files. Filename isn't preserved this
+    // way — accepted tradeoff.
+    const iosBlobUrl = URL.createObjectURL(doc.output("blob"));
+    iosWindow.location.href = iosBlobUrl;
+    setTimeout(() => URL.revokeObjectURL(iosBlobUrl), 40000);
     return;
   }
 
