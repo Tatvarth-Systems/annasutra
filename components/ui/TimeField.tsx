@@ -81,6 +81,7 @@ export const TimeField = ({ id, value, onChange, invalid }: TimeFieldProps) => {
     );
   };
 
+  /** Updates the hour segment from raw input digits and emits if complete. */
   const handleHourChange = (raw: string) => {
     let digits = toAsciiDigits(raw).replace(/\D/g, "").slice(0, 2);
     if (digits.length === 2) digits = clampPad(digits, 1, 12);
@@ -88,6 +89,7 @@ export const TimeField = ({ id, value, onChange, invalid }: TimeFieldProps) => {
     emit(digits, minute, period);
   };
 
+  /** Updates the minute segment from raw input digits and emits if complete. */
   const handleMinuteChange = (raw: string) => {
     let digits = toAsciiDigits(raw).replace(/\D/g, "").slice(0, 2);
     if (digits.length === 2) digits = clampPad(digits, 0, 59);
@@ -95,6 +97,7 @@ export const TimeField = ({ id, value, onChange, invalid }: TimeFieldProps) => {
     emit(hour, digits, period);
   };
 
+  /** Pads the hour segment to 2 digits on blur and re-emits. */
   const handleHourBlur = () => {
     if (!hour) return;
     const padded = clampPad(hour, 1, 12);
@@ -102,6 +105,7 @@ export const TimeField = ({ id, value, onChange, invalid }: TimeFieldProps) => {
     emit(padded, minute, period);
   };
 
+  /** Pads the minute segment to 2 digits on blur and re-emits. */
   const handleMinuteBlur = () => {
     if (!minute) return;
     const padded = clampPad(minute, 0, 59);
@@ -109,6 +113,7 @@ export const TimeField = ({ id, value, onChange, invalid }: TimeFieldProps) => {
     emit(hour, padded, period);
   };
 
+  /** Updates the AM/PM period and re-emits. */
   const handlePeriodChange = (next: Period) => {
     setPeriod(next);
     emit(hour, minute, next);

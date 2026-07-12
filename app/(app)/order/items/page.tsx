@@ -1,7 +1,7 @@
 "use client";
 
 import type { OrderItem } from "@/lib/order/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
@@ -14,6 +14,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useT } from "@/lib/i18n/provider";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
+import { useOrderStepGuard } from "@/lib/order/useOrderStepGuard";
 
 /** Items selection page with add/edit/delete functionality. */
 const ItemsPage = () => {
@@ -22,16 +23,9 @@ const ItemsPage = () => {
   const { client, categoryId, items, setItems } = useOrderDraft();
   const { showToast } = useToast();
   const [editingItem, setEditingItem] = useState<OrderItem | null>(null);
+  const ready = useOrderStepGuard("items", { client, categoryId, items });
 
-  useEffect(() => {
-    if (!client) {
-      router.replace("/order/client");
-    } else if (!categoryId) {
-      router.replace("/order/category");
-    }
-  }, [client, categoryId, router]);
-
-  if (!client || !categoryId) return null;
+  if (!ready || !client || !categoryId) return null;
 
   /** Adds new item or updates existing one. */
   const handleSubmitItem = (item: OrderItem) => {

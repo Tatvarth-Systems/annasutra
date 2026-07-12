@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
@@ -21,6 +21,7 @@ import { toLocaleDigits } from "@/lib/i18n/numerals";
 import { useLocale, useT } from "@/lib/i18n/provider";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
+import { useOrderStepGuard } from "@/lib/order/useOrderStepGuard";
 import { generateOrderPdf } from "@/lib/pdf/generateOrderPdf";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 import { canShareFiles, isIOSWebKit } from "@/lib/utils/platform";
@@ -34,17 +35,9 @@ const ReviewPage = () => {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    if (!client) {
-      router.replace("/order/client");
-    } else if (!categoryId) {
-      router.replace("/order/category");
-    } else if (items.length === 0) {
-      router.replace("/order/items");
-    }
-  }, [client, categoryId, items, router]);
+  const ready = useOrderStepGuard("review", { client, categoryId, items });
 
-  if (!client || !categoryId || items.length === 0) return null;
+  if (!ready || !client || !categoryId || items.length === 0) return null;
 
   const CategoryIcon = CATEGORY_ICONS[categoryId];
 
