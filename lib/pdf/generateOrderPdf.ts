@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/config";
 import type { TFunction } from "@/lib/i18n/provider";
 import type { ClientDetails, OrderItem } from "@/lib/order/types";
 
-import { BUSINESS } from "@/config/business";
+import { BUSINESS, BUSINESS_PHONES } from "@/config/business";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { toLocaleDigits } from "@/lib/i18n/numerals";
 import { buildPdfFilename } from "@/lib/pdf/filename";
@@ -115,19 +115,32 @@ export const generateOrderPdf = async ({
   const marginX = 40;
   let cursorY = 48;
 
-  // Letterhead (always Latin — business name/address, not translated)
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
-  doc.setTextColor(...BRAND_RGB);
-  doc.text(BUSINESS.name, marginX, cursorY);
+  // Letterhead (localized: Latin vector text for en, rasterized Devanagari for mr)
+  const business = BUSINESS[locale];
+  drawText(doc, locale, business.name, marginX, cursorY, 18, "bold", BRAND_RGB);
   cursorY += 16;
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(...MUTED_RGB);
-  doc.text(`${BUSINESS.proprietor} · ${BUSINESS.address}`, marginX, cursorY);
+  drawText(
+    doc,
+    locale,
+    `${business.proprietor} · ${business.address}`,
+    marginX,
+    cursorY,
+    9,
+    "normal",
+    MUTED_RGB,
+  );
   cursorY += 13;
-  doc.text(BUSINESS.phones.join(" / "), marginX, cursorY);
+  drawText(
+    doc,
+    locale,
+    toLocaleDigits(BUSINESS_PHONES.join(" / "), locale),
+    marginX,
+    cursorY,
+    9,
+    "normal",
+    MUTED_RGB,
+  );
   cursorY += 18;
 
   doc.setDrawColor(...LINE_RGB);
