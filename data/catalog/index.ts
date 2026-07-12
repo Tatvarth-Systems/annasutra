@@ -25,13 +25,7 @@ export const CATALOG: Record<CategoryId, CatalogItem[]> = {
   rentals,
 };
 
-export function getItemsForCategory(categoryId: CategoryId): CatalogItem[] {
+/** Returns the catalog items for the given category. */
+export const getItemsForCategory = (categoryId: CategoryId): CatalogItem[] => {
   return CATALOG[categoryId];
-}
-
-export function findCatalogItem(
-  categoryId: CategoryId,
-  itemId: string,
-): CatalogItem | undefined {
-  return CATALOG[categoryId].find((item) => item.id === itemId);
-}
+};

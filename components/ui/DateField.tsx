@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 
+import { useT } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 import {
   buildMonthGrid,
@@ -11,21 +12,7 @@ import {
   parseISODate,
 } from "@/lib/utils/date";
 
-const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const MONTH_LABELS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+const WEEKDAY_INDEXES = [0, 1, 2, 3, 4, 5, 6];
 
 type DateFieldProps = {
   id: string;
@@ -43,6 +30,7 @@ export const DateField = ({
   invalid,
   placeholder = "dd/mm/yyyy",
 }: DateFieldProps) => {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const today = useMemo(() => new Date(), []);
@@ -120,25 +108,25 @@ export const DateField = ({
       {open && (
         <div
           role="dialog"
-          aria-label="Choose date"
+          aria-label={t("dateField.chooseDate")}
           className="absolute z-20 mt-2 w-72 rounded-md border border-line bg-white p-3 shadow-lg"
         >
           <div className="mb-2 flex items-center justify-between">
             <button
               type="button"
               onClick={goPrevMonth}
-              aria-label="Previous month"
+              aria-label={t("dateField.previousMonth")}
               className="rounded p-1 text-muted hover:bg-brand-soft hover:text-brand"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <span className="text-sm font-medium text-ink">
-              {MONTH_LABELS[viewMonth]} {viewYear}
+              {t(`dateField.months.${viewMonth}`)} {viewYear}
             </span>
             <button
               type="button"
               onClick={goNextMonth}
-              aria-label="Next month"
+              aria-label={t("dateField.nextMonth")}
               className="rounded p-1 text-muted hover:bg-brand-soft hover:text-brand"
             >
               <ChevronRight className="h-4 w-4" />
@@ -146,8 +134,10 @@ export const DateField = ({
           </div>
 
           <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted">
-            {WEEKDAY_LABELS.map((weekday) => (
-              <span key={weekday}>{weekday}</span>
+            {WEEKDAY_INDEXES.map((weekday) => (
+              <span key={weekday}>
+                {t(`dateField.weekdaysShort.${weekday}`)}
+              </span>
             ))}
           </div>
           <div className="mt-1 grid grid-cols-7 gap-1">

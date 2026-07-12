@@ -31,8 +31,9 @@ const WHOLE_NUMBER_UNITS: ReadonlySet<Unit> = new Set([
   "plate",
 ]);
 
-export function getUnitInputConfig(unit: Unit): UnitInputConfig {
+/** Returns the step/min input config for a unit, whole numbers only for count-based units. */
+export const getUnitInputConfig = (unit: Unit): UnitInputConfig => {
   return WHOLE_NUMBER_UNITS.has(unit)
     ? { step: 1, min: 1 }
     : { step: 0.5, min: 0.5 };
-}
+};

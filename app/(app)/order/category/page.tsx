@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LayoutGrid, UserPlus } from "lucide-react";
 
@@ -12,20 +11,17 @@ import { CATEGORIES } from "@/data/categories";
 import { useT } from "@/lib/i18n/provider";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
+import { useOrderStepGuard } from "@/lib/order/useOrderStepGuard";
 
 /** Category selection page with redirect to client page if no client. */
 const CategoryPage = () => {
   const t = useT();
   const router = useRouter();
-  const { client, categoryId, setCategory, startNewClient } = useOrderDraft();
+  const { client, categoryId, items, setCategory, startNewClient } =
+    useOrderDraft();
+  const ready = useOrderStepGuard("category", { client, categoryId, items });
 
-  useEffect(() => {
-    if (!client) {
-      router.replace("/order/client");
-    }
-  }, [client, router]);
-
-  if (!client) return null;
+  if (!ready || !client) return null;
 
   /** Sets category and navigates to items page. */
   const handleSelect = (id: (typeof CATEGORIES)[number]["id"]) => {

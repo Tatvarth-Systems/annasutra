@@ -47,44 +47,41 @@ const getServerSnapshot = (): OrderDraft => {
   return SERVER_SNAPSHOT;
 };
 
-/** Updates client details, clears category and items. */
-const setClientDetails = (details: ClientDetails): void => {
+/** Merges a patch into the draft, persists it, and notifies listeners. */
+const applyPatch = (patch: Partial<OrderDraft>): void => {
   ensureInitialized();
-  snapshot = { ...snapshot, client: details, categoryId: null, items: [] };
+  snapshot = { ...snapshot, ...patch };
   writeDraft(snapshot);
   emit();
+};
+
+/** Updates client details, clears category and items. */
+const setClientDetails = (details: ClientDetails): void => {
+  applyPatch({ client: details, categoryId: null, items: [] });
 };
 
 /** Updates category, clears items. */
 const setCategory = (categoryId: CategoryId): void => {
   ensureInitialized();
   if (snapshot.categoryId === categoryId) return;
-  snapshot = { ...snapshot, categoryId, items: [] };
-  writeDraft(snapshot);
-  emit();
+  applyPatch({ categoryId, items: [] });
 };
 
 /** Updates order items. */
 const setItems = (items: OrderItem[]): void => {
-  ensureInitialized();
-  snapshot = { ...snapshot, items };
-  writeDraft(snapshot);
-  emit();
+  applyPatch({ items });
 };
 
 /** Clears category and items after download. */
 const resetAfterDownload = (): void => {
-  ensureInitialized();
-  snapshot = { ...snapshot, categoryId: null, items: [] };
-  writeDraft(snapshot);
-  emit();
+  applyPatch({ categoryId: null, items: [] });
 };
 
 /** Clears entire draft and starts fresh client. */
 const startNewClient = (): void => {
+  ensureInitialized();
   clearDraft();
   snapshot = emptyDraft();
-  initialized = true;
   emit();
 };
 
