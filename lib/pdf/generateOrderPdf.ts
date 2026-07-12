@@ -16,6 +16,7 @@ type GenerateOrderPdfArgs = {
   items: OrderItem[];
   t: TFunction;
   locale: Locale;
+  iosWindow?: Window | null;
 };
 
 const BRAND_RGB: [number, number, number] = [194, 65, 12];
@@ -102,6 +103,7 @@ export const generateOrderPdf = async ({
   items,
   t,
   locale,
+  iosWindow,
 }: GenerateOrderPdfArgs): Promise<void> => {
   const { jsPDF } = await import("jspdf");
   const { default: autoTable } = await import("jspdf-autotable");
@@ -351,6 +353,16 @@ export const generateOrderPdf = async ({
   }
 
   const filename = buildPdfFilename(client, categoryId, t, locale);
+
+  if (iosWindow) {
+    // iOS/iPadOS WebKit ignores the download attribute on blob URLs (still-open WebKit
+    // bug: https://bugs.webkit.org/show_bug.cgi?id=167341). Data URIs survive navigation
+    // and render in Safari's built-in PDF viewer, where the user can Share > Save to
+    // Files. Filename isn't preserved this way — accepted tradeoff.
+    iosWindow.location.href = doc.output("datauristring");
+    return;
+  }
+
   const blobUrl = URL.createObjectURL(doc.output("blob"));
   const anchor = document.createElement("a");
   anchor.href = blobUrl;
@@ -358,5 +370,7 @@ export const generateOrderPdf = async ({
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
-  URL.revokeObjectURL(blobUrl);
+  // Revoking immediately races the browser's async download handoff and can invalidate
+  // the blob before the download starts; delay it (matches FileSaver.js's own 40s precedent).
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 40000);
 };

@@ -23,6 +23,7 @@ import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { generateOrderPdf } from "@/lib/pdf/generateOrderPdf";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
+import { isIOSWebKit } from "@/lib/utils/platform";
 
 /** Order review page with PDF download functionality. */
 const ReviewPage = () => {
@@ -51,6 +52,11 @@ const ReviewPage = () => {
   const handleDownload = async () => {
     if (!client || !categoryId) return;
 
+    // Opened synchronously, before any await, so it stays tied to the user gesture and
+    // isn't popup-blocked. iOS/iPadOS WebKit can't force a blob download (see
+    // generateOrderPdf), so the PDF is navigated into this pre-opened tab instead.
+    const iosWindow = isIOSWebKit() ? window.open("", "_blank") : null;
+
     setError(false);
     setDownloading(true);
     try {
@@ -60,10 +66,12 @@ const ReviewPage = () => {
         items,
         t,
         locale,
+        iosWindow,
       });
       resetAfterDownload();
       router.replace("/order/category");
     } catch {
+      iosWindow?.close();
       setError(true);
     } finally {
       setDownloading(false);
