@@ -16,6 +16,7 @@ import { Select } from "@/components/ui/Select";
 import { CUSTOM_ITEM_ID, getItemsForCategory } from "@/data/catalog";
 import { getUnitInputConfig, UNIT_IDS } from "@/data/units";
 import { useT } from "@/lib/i18n/provider";
+import { normalizeForCompare } from "@/lib/utils/text";
 
 type AddItemRowProps = {
   categoryId: CategoryId;
@@ -73,7 +74,7 @@ export const AddItemRow = ({
         item.itemId === CUSTOM_ITEM_ID
           ? (item.customName ?? "")
           : t(`item.${item.itemId}`);
-      labels.add(label.trim().toLowerCase());
+      labels.add(normalizeForCompare(label));
     }
     return labels;
   }, [items, editingItem, t]);
@@ -138,7 +139,7 @@ export const AddItemRow = ({
       const trimmedName = customName.trim();
       if (trimmedName === "") {
         nextErrors.customName = t("client.requiredError");
-      } else if (usedLabels.has(trimmedName.toLowerCase())) {
+      } else if (usedLabels.has(normalizeForCompare(trimmedName))) {
         nextErrors.customName = t("items.duplicateNameError");
       }
     }

@@ -2,7 +2,8 @@ import type { ClientDetails } from "@/lib/order/types";
 import { CalendarClock, MapPin, Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
-import { useT } from "@/lib/i18n/provider";
+import { toLocaleDigits } from "@/lib/i18n/numerals";
+import { useLocale, useT } from "@/lib/i18n/provider";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 
 type ClientSummaryProps = {
@@ -13,6 +14,7 @@ type ClientSummaryProps = {
 /** Summary card displaying client details. */
 export const ClientSummary = ({ client, onEdit }: ClientSummaryProps) => {
   const t = useT();
+  const locale = useLocale();
 
   return (
     <div className="mb-6 flex flex-col gap-3 rounded-md border border-line bg-brand-soft px-4 py-3 text-sm text-ink sm:flex-row sm:items-start sm:justify-between sm:gap-4">
@@ -24,8 +26,8 @@ export const ClientSummary = ({ client, onEdit }: ClientSummaryProps) => {
         </span>
         <span className="inline-flex items-center gap-1 text-muted">
           <CalendarClock className="h-3.5 w-3.5" />
-          {formatDateDisplay(client.eventDate)}{" "}
-          {formatTimeDisplay(client.eventTime)}
+          {toLocaleDigits(formatDateDisplay(client.eventDate), locale)}{" "}
+          {toLocaleDigits(formatTimeDisplay(client.eventTime), locale)}
         </span>
       </div>
       {onEdit && (

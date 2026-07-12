@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChefHat, ChevronDown, CircleUserRound, LogOut } from "lucide-react";
 
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import {
   clearSessionCookie,
   getSessionServerSnapshot,
@@ -57,41 +58,45 @@ export const Navbar = () => {
           {t("common.appName")}
         </Link>
 
-        {username && (
-          <div ref={rootRef} className="relative">
-            <button
-              type="button"
-              onClick={() => setOpen((value) => !value)}
-              aria-expanded={open}
-              aria-haspopup="menu"
-              className="flex items-center gap-1.5 rounded-full py-1 pr-2 pl-1 text-sm text-ink hover:bg-brand-soft"
-            >
-              <CircleUserRound className="h-7 w-7 text-brand" />
-              <span className="hidden sm:inline">{username}</span>
-              <ChevronDown className="h-4 w-4 text-muted" />
-            </button>
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
 
-            {open && (
-              <div
-                role="menu"
-                className="absolute right-0 mt-2 w-48 overflow-hidden rounded-md border border-line bg-white py-1 shadow-lg"
+          {username && (
+            <div ref={rootRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setOpen((value) => !value)}
+                aria-expanded={open}
+                aria-haspopup="menu"
+                className="flex items-center gap-1.5 rounded-full py-1 pr-2 pl-1 text-sm text-ink hover:bg-brand-soft"
               >
-                <div className="border-b border-line px-3 py-2 text-sm text-muted">
-                  {t("welcome.greeting", { name: username })}
-                </div>
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={handleSignOut}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-brand-soft"
+                <CircleUserRound className="h-7 w-7 text-brand" />
+                <span className="hidden sm:inline">{username}</span>
+                <ChevronDown className="h-4 w-4 text-muted" />
+              </button>
+
+              {open && (
+                <div
+                  role="menu"
+                  className="absolute right-0 mt-2 w-48 overflow-hidden rounded-md border border-line bg-white py-1 shadow-lg"
                 >
-                  <LogOut className="h-4 w-4" />
-                  {t("auth.signOut")}
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+                  <div className="border-b border-line px-3 py-2 text-sm text-muted">
+                    {t("welcome.greeting", { name: username })}
+                  </div>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={handleSignOut}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-brand-soft"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    {t("auth.signOut")}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

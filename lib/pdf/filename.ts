@@ -4,11 +4,11 @@ import type { ClientDetails } from "@/lib/order/types";
 
 import { formatDateDisplay } from "@/lib/utils/date";
 
-/** Converts text to CamelCase filename-safe segment. */
+/** Converts text to CamelCase filename-safe segment, preserving non-Latin scripts. */
 const toFilenameSegment = (text: string): string => {
   return text
     .trim()
-    .split(/[^a-zA-Z0-9]+/)
+    .split(/[^\p{L}\p{N}]+/u)
     .filter(Boolean)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join("");

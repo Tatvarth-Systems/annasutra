@@ -5,7 +5,8 @@ import { PackageOpen, Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
-import { useT } from "@/lib/i18n/provider";
+import { toLocaleDigits } from "@/lib/i18n/numerals";
+import { useLocale, useT } from "@/lib/i18n/provider";
 
 type ItemsTableProps = {
   items: OrderItem[];
@@ -16,6 +17,7 @@ type ItemsTableProps = {
 /** Table displaying order items with edit and delete actions. */
 export const ItemsTable = ({ items, onEdit, onDelete }: ItemsTableProps) => {
   const t = useT();
+  const locale = useLocale();
 
   /** Returns display label for an item. */
   const labelFor = (item: OrderItem): string => {
@@ -45,7 +47,7 @@ export const ItemsTable = ({ items, onEdit, onDelete }: ItemsTableProps) => {
               {labelFor(item)}
             </p>
             <p className="text-sm text-muted">
-              {item.qty} {t(`unit.${item.unit}`)}
+              {toLocaleDigits(item.qty, locale)} {t(`unit.${item.unit}`)}
               {item.note ? ` · ${item.note}` : ""}
             </p>
           </div>

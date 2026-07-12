@@ -6,6 +6,7 @@ export type Messages = Record<string, unknown>;
 
 const dictionaries: Record<Locale, () => Promise<Messages>> = {
   en: () => import("@/messages/en.json").then((module) => module.default),
+  mr: () => import("@/messages/mr.json").then((module) => module.default),
 };
 
 /** Loads the message dictionary for a given locale. */
