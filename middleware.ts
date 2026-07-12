@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 
 import { SESSION_COOKIE } from "@/lib/auth/session";
 
-export function middleware(request: NextRequest) {
+/** Redirects unauthenticated users to signin and blocks auth routes for signed-in users. */
+export const middleware = (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const signedIn = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
 
@@ -22,7 +23,7 @@ export function middleware(request: NextRequest) {
   return signedIn
     ? NextResponse.next()
     : NextResponse.redirect(new URL("/signin", request.url));
-}
+};
 
 export const config = {
   matcher: [

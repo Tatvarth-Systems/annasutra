@@ -337,5 +337,13 @@ export const generateOrderPdf = async ({
     );
   }
 
-  doc.save(buildPdfFilename(client, categoryId, t));
+  const filename = buildPdfFilename(client, categoryId, t, locale);
+  const blobUrl = URL.createObjectURL(doc.output("blob"));
+  const anchor = document.createElement("a");
+  anchor.href = blobUrl;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(blobUrl);
 };

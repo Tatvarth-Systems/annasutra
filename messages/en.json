@@ -47,7 +47,9 @@
     "eventTypeBirthday": "Birthday",
     "eventTypeOther": "Other",
     "requiredError": "This field is required",
-    "pastTimeError": "This time has already passed"
+    "pastTimeError": "This time has already passed",
+    "am": "AM",
+    "pm": "PM"
   },
   "category": {
     "title": "Select a category",

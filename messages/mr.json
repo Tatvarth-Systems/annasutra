@@ -47,7 +47,9 @@
     "eventTypeBirthday": "वाढदिवस",
     "eventTypeOther": "इतर",
     "requiredError": "हे क्षेत्र आवश्यक आहे",
-    "pastTimeError": "ही वेळ आधीच उलटून गेली आहे"
+    "pastTimeError": "ही वेळ आधीच उलटून गेली आहे",
+    "am": "AM",
+    "pm": "PM"
   },
   "category": {
     "title": "वर्ग निवडा",

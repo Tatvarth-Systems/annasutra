@@ -15,9 +15,12 @@ type LocaleContextValue = {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-/** Maps an app locale to a react-aria locale, forcing Devanagari numerals for mr. */
+/** Maps an app locale to a react-aria locale. mr-IN's default numbering system is already
+ * Devanagari; leaving off the `-u-nu-deva` extension keeps that display while letting
+ * react-aria's NumberParser auto-detect and accept Latin digits too (it skips that
+ * fallback whenever the locale string hardcodes a numbering system via `-nu-`). */
 const ariaLocaleFor = (locale: Locale): string | undefined => {
-  return locale === "mr" ? "mr-IN-u-nu-deva" : undefined;
+  return locale === "mr" ? "mr-IN" : undefined;
 };
 
 /** Provides locale and messages context to child components. */
