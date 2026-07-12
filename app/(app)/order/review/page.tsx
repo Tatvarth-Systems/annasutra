@@ -23,7 +23,7 @@ import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { generateOrderPdf } from "@/lib/pdf/generateOrderPdf";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
-import { isIOSWebKit } from "@/lib/utils/platform";
+import { canShareFiles, isIOSWebKit } from "@/lib/utils/platform";
 
 /** Order review page with PDF download functionality. */
 const ReviewPage = () => {
@@ -52,10 +52,11 @@ const ReviewPage = () => {
   const handleDownload = async () => {
     if (!client || !categoryId) return;
 
-    // Opened synchronously, before any await, so it stays tied to the user gesture and
-    // isn't popup-blocked. iOS/iPadOS WebKit can't force a blob download (see
-    // generateOrderPdf), so the PDF is navigated into this pre-opened tab instead.
-    const iosWindow = isIOSWebKit() ? window.open("", "_blank") : null;
+    // Only needed as a fallback for iOS versions without Web Share file support (see
+    // generateOrderPdf); opened synchronously, before any await, so it stays tied to the
+    // user gesture and isn't popup-blocked.
+    const iosWindow =
+      isIOSWebKit() && !canShareFiles() ? window.open("", "_blank") : null;
 
     setError(false);
     setDownloading(true);
@@ -70,8 +71,9 @@ const ReviewPage = () => {
       });
       resetAfterDownload();
       router.replace("/order/category");
-    } catch {
+    } catch (err) {
       iosWindow?.close();
+      if (err instanceof Error && err.name === "AbortError") return;
       setError(true);
     } finally {
       setDownloading(false);

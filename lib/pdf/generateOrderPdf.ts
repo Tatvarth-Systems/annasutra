@@ -9,6 +9,7 @@ import { toLocaleDigits } from "@/lib/i18n/numerals";
 import { buildPdfFilename } from "@/lib/pdf/filename";
 import { ensureCanvasFontLoaded, rasterizeText } from "@/lib/pdf/rasterizeText";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
+import { canShareFiles, isIOSWebKit } from "@/lib/utils/platform";
 
 type GenerateOrderPdfArgs = {
   client: ClientDetails;
@@ -354,13 +355,22 @@ export const generateOrderPdf = async ({
 
   const filename = buildPdfFilename(client, categoryId, t, locale);
 
+  if (isIOSWebKit() && canShareFiles()) {
+    // Web Share hands the OS a real named File, so Share > Save to Files gets the correct
+    // name — unlike navigating to a blob: URL, which carries no filename metadata at all.
+    const file = new File([doc.output("blob")], filename, {
+      type: "application/pdf",
+    });
+    await navigator.share({ files: [file] });
+    return;
+  }
+
   if (iosWindow) {
-    // iOS/iPadOS WebKit ignores the download attribute on blob URLs (still-open WebKit
-    // bug: https://bugs.webkit.org/show_bug.cgi?id=167341), so a plain navigation is used
-    // instead. Safari 14+ blocks top-level JS navigation to data: URLs (anti-phishing),
-    // which is why that was blank; blob: URLs aren't subject to that block and render
-    // fine here, letting the user Share > Save to Files. Filename isn't preserved this
-    // way — accepted tradeoff.
+    // Fallback for iOS versions without Web Share file support: iOS/iPadOS WebKit ignores
+    // the download attribute on blob URLs (still-open WebKit bug:
+    // https://bugs.webkit.org/show_bug.cgi?id=167341), so a plain navigation is used
+    // instead. Safari 14+ blocks top-level JS navigation to data: URLs (anti-phishing), so
+    // blob: is used instead of a data URI — renders fine, but the filename isn't preserved.
     const iosBlobUrl = URL.createObjectURL(doc.output("blob"));
     iosWindow.location.href = iosBlobUrl;
     setTimeout(() => URL.revokeObjectURL(iosBlobUrl), 40000);
