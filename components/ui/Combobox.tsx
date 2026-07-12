@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils/cn";
+import { normalizeForCompare } from "@/lib/utils/text";
 
 export type ComboboxOption = {
   id: string;
@@ -63,9 +64,9 @@ export const Combobox = ({
   const filtered = useMemo(() => {
     const pinned = options.filter((option) => option.pinned);
     const rest = options.filter((option) => !option.pinned);
-    const q = query.trim().toLowerCase();
+    const q = normalizeForCompare(query);
     const matches = q
-      ? rest.filter((option) => option.label.toLowerCase().includes(q))
+      ? rest.filter((option) => normalizeForCompare(option.label).includes(q))
       : rest;
     return [...pinned, ...matches];
   }, [options, query]);

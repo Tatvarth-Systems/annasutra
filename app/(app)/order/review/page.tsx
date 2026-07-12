@@ -17,7 +17,8 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
-import { useT } from "@/lib/i18n/provider";
+import { toLocaleDigits } from "@/lib/i18n/numerals";
+import { useLocale, useT } from "@/lib/i18n/provider";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { generateOrderPdf } from "@/lib/pdf/generateOrderPdf";
@@ -26,6 +27,7 @@ import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 /** Order review page with PDF download functionality. */
 const ReviewPage = () => {
   const t = useT();
+  const locale = useLocale();
   const router = useRouter();
   const { client, categoryId, items, resetAfterDownload } = useOrderDraft();
   const [downloading, setDownloading] = useState(false);
@@ -57,6 +59,7 @@ const ReviewPage = () => {
         categoryId,
         items,
         t,
+        locale,
       });
       resetAfterDownload();
       router.replace("/order/category");
@@ -94,8 +97,8 @@ const ReviewPage = () => {
             {t("review.dateTime")}
           </dt>
           <dd className="text-ink">
-            {formatDateDisplay(client.eventDate)} ·{" "}
-            {formatTimeDisplay(client.eventTime)}
+            {toLocaleDigits(formatDateDisplay(client.eventDate), locale)} ·{" "}
+            {toLocaleDigits(formatTimeDisplay(client.eventTime), locale)}
           </dd>
 
           <dt className="flex items-center gap-1.5 text-muted">
@@ -126,7 +129,7 @@ const ReviewPage = () => {
                 )}
               </div>
               <span className="shrink-0 text-muted">
-                {item.qty} {t(`unit.${item.unit}`)}
+                {toLocaleDigits(item.qty, locale)} {t(`unit.${item.unit}`)}
               </span>
             </li>
           ))}
