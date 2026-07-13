@@ -9,6 +9,11 @@ export const localeLabels: Record<Locale, string> = {
   mr: "मर",
 };
 
+export const localeNames: Record<Locale, string> = {
+  en: "English",
+  mr: "मराठी",
+};
+
 /** Resolves a locale string to a supported Locale or falls back to default. */
 export const resolveLocale = (value: string | undefined): Locale => {
   return locales.includes(value as Locale) ? (value as Locale) : defaultLocale;
