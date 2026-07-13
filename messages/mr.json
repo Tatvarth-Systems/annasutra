@@ -157,7 +157,9 @@
   },
   "footer": {
     "poweredBy": "{name} द्वारा समर्थित",
-    "copyright": "© {year} सर्व हक्क राखीव."
+    "copyright": "© {year} सर्व हक्क राखीव.",
+    "terms": "सेवा अटी",
+    "privacy": "गोपनीयता धोरण"
   },
   "unit": {
     "kg": "किलो",

@@ -157,7 +157,9 @@
   },
   "footer": {
     "poweredBy": "Powered by {name}",
-    "copyright": "© {year} All rights reserved."
+    "copyright": "© {year} All rights reserved.",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
   },
   "unit": {
     "kg": "kg",
