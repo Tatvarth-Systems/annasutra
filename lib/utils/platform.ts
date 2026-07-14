@@ -19,3 +19,9 @@ export const canShareFiles = (): boolean => {
   const probe = new File([""], "probe.pdf", { type: "application/pdf" });
   return navigator.canShare({ files: [probe] });
 };
+
+/** No-op subscription for useSyncExternalStore — Web Share file support is static for a browser session, nothing to subscribe to. */
+export const subscribeToShareSupport = (): (() => void) => () => {};
+
+/** Server snapshot for canShareFiles(), always false since `navigator` is unavailable during SSR. */
+export const getShareSupportServerSnapshot = (): boolean => false;
