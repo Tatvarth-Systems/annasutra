@@ -35,5 +35,5 @@ const WHOLE_NUMBER_UNITS: ReadonlySet<Unit> = new Set([
 export const getUnitInputConfig = (unit: Unit): UnitInputConfig => {
   return WHOLE_NUMBER_UNITS.has(unit)
     ? { step: 1, min: 1 }
-    : { step: 0.5, min: 0.5 };
+    : { step: 0.5, min: 0.05 };
 };
