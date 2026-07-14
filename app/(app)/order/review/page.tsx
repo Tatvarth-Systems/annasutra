@@ -23,6 +23,7 @@ import { useLocale, useT } from "@/lib/i18n/provider";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { useOrderStepGuard } from "@/lib/order/useOrderStepGuard";
+import { withQty } from "@/lib/order/visibleItems";
 import { generateOrderPdf, shareOrderPdf } from "@/lib/pdf/generateOrderPdf";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
 import {
@@ -49,8 +50,10 @@ const ReviewPage = () => {
   );
 
   const ready = useOrderStepGuard("review", { client, categoryId, items });
+  const visibleItems = withQty(items);
 
-  if (!ready || !client || !categoryId || items.length === 0) return null;
+  if (!ready || !client || !categoryId || visibleItems.length === 0)
+    return null;
 
   const CategoryIcon = CATEGORY_ICONS[categoryId];
 
@@ -143,11 +146,11 @@ const ReviewPage = () => {
         </dl>
 
         <p className="mt-4 text-sm font-medium text-ink">
-          {t("review.itemCount", { count: items.length })}
+          {t("review.itemCount", { count: visibleItems.length })}
         </p>
 
         <ul className="mt-2 divide-y divide-line overflow-hidden rounded-md border border-line">
-          {items.map((item) => (
+          {visibleItems.map((item) => (
             <li
               key={item.uid}
               className="flex items-center justify-between gap-3 px-4 py-2 text-sm odd:bg-white even:bg-line/20"

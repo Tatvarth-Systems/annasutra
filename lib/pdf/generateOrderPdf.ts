@@ -6,6 +6,7 @@ import type { ClientDetails, OrderItem } from "@/lib/order/types";
 import { BUSINESS, BUSINESS_PHONES } from "@/config/business";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { toLocaleDigits } from "@/lib/i18n/numerals";
+import { withQty } from "@/lib/order/visibleItems";
 import { buildPdfFilename } from "@/lib/pdf/filename";
 import { ensureCanvasFontLoaded, rasterizeText } from "@/lib/pdf/rasterizeText";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
@@ -449,6 +450,7 @@ const buildPdfDocument = async ({
   t,
   locale,
 }: BuildPdfArgs): Promise<{ doc: PdfDoc; filename: string }> => {
+  const visibleItems = withQty(items);
   const { jsPDF } = await import("jspdf");
   const { default: autoTable } = await import("jspdf-autotable");
 
@@ -478,7 +480,7 @@ const buildPdfDocument = async ({
     contentWidth,
     cursorY,
   );
-  drawItemsTable(doc, autoTable, locale, t, items, MARGIN_X, cursorY);
+  drawItemsTable(doc, autoTable, locale, t, visibleItems, MARGIN_X, cursorY);
   drawFooter(doc, locale, t, MARGIN_X, pageWidth);
 
   const filename = buildPdfFilename(client, categoryId, t, locale);

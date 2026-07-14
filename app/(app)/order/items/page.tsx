@@ -1,11 +1,12 @@
 "use client";
 
 import type { OrderItem } from "@/lib/order/types";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
-import { AddItemRow } from "@/components/order/AddItemRow";
+import { AddCustomItemForm } from "@/components/order/AddCustomItemForm";
+import { CatalogChecklist } from "@/components/order/CatalogChecklist";
 import { ClientSummary } from "@/components/order/ClientSummary";
 import { ItemsTable } from "@/components/order/ItemsTable";
 import { Button } from "@/components/ui/Button";
@@ -13,50 +14,94 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { useToast } from "@/components/ui/Toast";
 import { useT } from "@/lib/i18n/provider";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
+import { useItemsChecklist } from "@/lib/order/useItemsChecklist";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { useOrderStepGuard } from "@/lib/order/useOrderStepGuard";
+import { normalizeForCompare } from "@/lib/utils/text";
 
-/** Items selection page with add/edit/delete functionality. */
+/** Items page: catalog checklist with inline qty/unit editing, plus custom item add/edit/delete. */
 const ItemsPage = () => {
   const t = useT();
   const router = useRouter();
   const { client, categoryId, items, setItems } = useOrderDraft();
   const { showToast } = useToast();
-  const [editingItem, setEditingItem] = useState<OrderItem | null>(null);
+  const [editingCustomItem, setEditingCustomItem] = useState<OrderItem | null>(
+    null,
+  );
   const ready = useOrderStepGuard("items", { client, categoryId, items });
+
+  const {
+    catalogItems,
+    checklist,
+    setChecklistRow,
+    customItems,
+    setCustomItems,
+    hasItems,
+    flush,
+  } = useItemsChecklist(categoryId, items, setItems);
+
+  const usedLabels = useMemo(() => {
+    const labels = new Set<string>();
+    for (const item of catalogItems) {
+      if ((checklist[item.id]?.qty ?? 0) > 0) {
+        labels.add(normalizeForCompare(t(`item.${item.id}`)));
+      }
+    }
+    for (const item of customItems) {
+      if (editingCustomItem && item.uid === editingCustomItem.uid) continue;
+      labels.add(normalizeForCompare(item.customName ?? ""));
+    }
+    return labels;
+  }, [catalogItems, checklist, customItems, editingCustomItem, t]);
 
   if (!ready || !client || !categoryId) return null;
 
-  /** Adds new item or updates existing one. */
-  const handleSubmitItem = (item: OrderItem) => {
-    const exists = items.some((existing) => existing.uid === item.uid);
-    setItems(
+  const selectedCount =
+    customItems.length +
+    Object.values(checklist).filter((row) => row.qty > 0).length;
+
+  /** Adds new custom item or updates an existing one. */
+  const handleSubmitCustomItem = (item: OrderItem) => {
+    const exists = customItems.some((existing) => existing.uid === item.uid);
+    setCustomItems(
       exists
-        ? items.map((existing) => (existing.uid === item.uid ? item : existing))
-        : [...items, item],
+        ? customItems.map((existing) =>
+            existing.uid === item.uid ? item : existing,
+          )
+        : [...customItems, item],
     );
-    setEditingItem(null);
+    setEditingCustomItem(null);
   };
 
-  /** Deletes item with undo toast. */
-  const handleDelete = (uid: string) => {
-    const index = items.findIndex((item) => item.uid === uid);
+  /** Deletes a custom item with an undo toast. */
+  const handleDeleteCustomItem = (uid: string) => {
+    const index = customItems.findIndex((item) => item.uid === uid);
     if (index === -1) return;
-    const removed = items[index];
-    const next = items.filter((item) => item.uid !== uid);
-    setItems(next);
-    if (editingItem?.uid === uid) setEditingItem(null);
+    const removed = customItems[index];
+    const next = customItems.filter((item) => item.uid !== uid);
+    setCustomItems(next);
+    if (editingCustomItem?.uid === uid) setEditingCustomItem(null);
 
     showToast(t("items.deletedToast"), {
       label: t("common.undo"),
       onClick: () => {
-        setItems([...next.slice(0, index), removed, ...next.slice(index)]);
+        setCustomItems([
+          ...next.slice(0, index),
+          removed,
+          ...next.slice(index),
+        ]);
       },
     });
   };
 
+  /** Flushes pending edits and navigates to the review step. */
+  const handleReview = () => {
+    flush();
+    router.push("/order/review");
+  };
+
   return (
-    <div>
+    <div className="pb-32">
       <PageHeader
         title={t("items.title")}
         description={t("items.subtitle", {
@@ -68,38 +113,50 @@ const ItemsPage = () => {
 
       <ClientSummary client={client} />
 
-      <div>
+      <CatalogChecklist
+        catalogItems={catalogItems}
+        checklist={checklist}
+        onChangeRow={setChecklistRow}
+      />
+
+      <div className="mt-8">
         <h2 className="text-base font-semibold text-ink">
-          {t("items.listTitle")}
+          {t("items.customSectionTitle")}
         </h2>
         <p className="mt-1 text-sm text-muted">{t("items.listSubtitle")}</p>
         <div className="mt-3">
           <ItemsTable
-            items={items}
-            onEdit={setEditingItem}
-            onDelete={handleDelete}
+            items={customItems}
+            onEdit={setEditingCustomItem}
+            onDelete={handleDeleteCustomItem}
           />
         </div>
       </div>
 
       <div className="mt-6">
-        <AddItemRow
-          categoryId={categoryId}
-          items={items}
-          editingItem={editingItem}
-          onSubmit={handleSubmitItem}
-          onCancelEdit={() => setEditingItem(null)}
-        />
+        <h2 className="text-base font-semibold text-ink">
+          {t("items.addCustomItemTitle")}
+        </h2>
+        <div className="mt-3">
+          <AddCustomItemForm
+            editingItem={editingCustomItem}
+            usedLabels={usedLabels}
+            onSubmit={handleSubmitCustomItem}
+            onCancelEdit={() => setEditingCustomItem(null)}
+          />
+        </div>
       </div>
 
-      <div className="mt-6 flex justify-end">
-        <Button
-          disabled={items.length === 0}
-          onClick={() => router.push("/order/review")}
-        >
-          {t("items.review")}
-          <ArrowRight className="h-4 w-4" />
-        </Button>
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+          <p className="text-sm text-muted">
+            {t("items.selectedCount", { count: selectedCount })}
+          </p>
+          <Button disabled={!hasItems} onClick={handleReview}>
+            {t("items.review")}
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );
