@@ -47,6 +47,8 @@ export const NumberField = ({
       minValue={minValue}
       maxValue={maxValue}
       step={step}
+      // avoids "snap" (default) force-rounding typed values to the nearest step; +/- still step normally
+      commitBehavior="validate"
       isInvalid={invalid}
       aria-label={ariaLabel}
     >
