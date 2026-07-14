@@ -58,8 +58,10 @@ export const CatalogChecklist = ({
               item={item}
               qty={checklist[item.id]?.qty ?? 0}
               unit={checklist[item.id]?.unit ?? item.defaultUnit}
+              note={checklist[item.id]?.note}
               onQtyChange={(qty) => onChangeRow(item.id, { qty })}
               onUnitChange={(unit) => onChangeRow(item.id, { unit })}
+              onNoteChange={(note) => onChangeRow(item.id, { note })}
             />
           ))}
         </ul>

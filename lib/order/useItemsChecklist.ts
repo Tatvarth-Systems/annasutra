@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { CUSTOM_ITEM_ID, getItemsForCategory } from "@/data/catalog";
 
-export type ChecklistRow = { qty: number; unit: Unit };
+export type ChecklistRow = { qty: number; unit: Unit; note?: string };
 type ChecklistState = Record<string, ChecklistRow>;
 
 const FLUSH_DELAY_MS = 300;
@@ -23,7 +23,7 @@ const buildChecklist = (
   for (const item of catalogItems) {
     const match = existing.get(item.id);
     state[item.id] = match
-      ? { qty: match.qty, unit: match.unit }
+      ? { qty: match.qty, unit: match.unit, note: match.note }
       : { qty: 0, unit: item.defaultUnit };
   }
   return state;
@@ -47,6 +47,7 @@ const buildOrderItems = (
       itemId: item.id,
       qty: checklist[item.id].qty,
       unit: checklist[item.id].unit,
+      note: checklist[item.id].note?.trim() || undefined,
     }));
   return [...fromCatalog, ...customItems];
 };

@@ -148,7 +148,7 @@ const ItemsPage = () => {
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 [padding-bottom:calc(0.75rem+env(safe-area-inset-bottom))]">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
           <p className="text-sm text-muted">
             {t("items.selectedCount", { count: selectedCount })}
           </p>
