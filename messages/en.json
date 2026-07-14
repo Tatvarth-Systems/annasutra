@@ -137,7 +137,10 @@
     "edit": "Edit",
     "download": "Download PDF",
     "generating": "Generating PDF...",
-    "downloadError": "Could not generate the PDF. Please try again."
+    "downloadError": "Could not generate the PDF. Please try again.",
+    "shareWhatsapp": "Share on WhatsApp",
+    "sharing": "Sharing...",
+    "shareError": "Could not share the PDF. Please try again."
   },
   "pdf": {
     "orderSheet": "Food Order Sheet",

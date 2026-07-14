@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
@@ -10,6 +10,7 @@ import {
   Loader2,
   MapPin,
   Pencil,
+  Share2,
   User,
 } from "lucide-react";
 
@@ -22,11 +23,16 @@ import { useLocale, useT } from "@/lib/i18n/provider";
 import { CATEGORY_ICONS } from "@/lib/order/categoryIcons";
 import { useOrderDraft } from "@/lib/order/useOrderDraft";
 import { useOrderStepGuard } from "@/lib/order/useOrderStepGuard";
-import { generateOrderPdf } from "@/lib/pdf/generateOrderPdf";
+import { generateOrderPdf, shareOrderPdf } from "@/lib/pdf/generateOrderPdf";
 import { formatDateDisplay, formatTimeDisplay } from "@/lib/utils/date";
-import { canShareFiles, isIOSWebKit } from "@/lib/utils/platform";
+import {
+  canShareFiles,
+  getShareSupportServerSnapshot,
+  isIOSWebKit,
+  subscribeToShareSupport,
+} from "@/lib/utils/platform";
 
-/** Order review page with PDF download functionality. */
+/** Order review page with PDF download and WhatsApp share functionality. */
 const ReviewPage = () => {
   const t = useT();
   const locale = useLocale();
@@ -34,6 +40,13 @@ const ReviewPage = () => {
   const { client, categoryId, items, resetAfterDownload } = useOrderDraft();
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [shareError, setShareError] = useState(false);
+  const canShare = useSyncExternalStore(
+    subscribeToShareSupport,
+    canShareFiles,
+    getShareSupportServerSnapshot,
+  );
 
   const ready = useOrderStepGuard("review", { client, categoryId, items });
 
@@ -70,6 +83,24 @@ const ReviewPage = () => {
       setError(true);
     } finally {
       setDownloading(false);
+    }
+  };
+
+  /** Generates PDF, hands it to the OS share sheet, resets draft, and navigates back to category page. */
+  const handleShare = async () => {
+    if (!client || !categoryId) return;
+
+    setShareError(false);
+    setSharing(true);
+    try {
+      await shareOrderPdf({ client, categoryId, items, t, locale });
+      resetAfterDownload();
+      router.replace("/order/category");
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      setShareError(true);
+    } finally {
+      setSharing(false);
     }
   };
 
@@ -144,16 +175,42 @@ const ReviewPage = () => {
             {t("review.downloadError")}
           </p>
         )}
+        {shareError && (
+          <p className="mt-4 flex items-center gap-1.5 text-sm text-danger">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {t("review.shareError")}
+          </p>
+        )}
 
-        <div className="mt-6 flex justify-end gap-2">
+        <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
           <Button
             variant="secondary"
+            className="w-full sm:w-auto"
             onClick={() => router.push("/order/items")}
           >
             <Pencil className="h-4 w-4" />
             {t("review.edit")}
           </Button>
-          <Button onClick={handleDownload} disabled={downloading}>
+          {canShare && (
+            <Button
+              variant="secondary"
+              className="w-full sm:w-auto"
+              onClick={handleShare}
+              disabled={sharing || downloading}
+            >
+              {sharing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Share2 className="h-4 w-4" />
+              )}
+              {sharing ? t("review.sharing") : t("review.shareWhatsapp")}
+            </Button>
+          )}
+          <Button
+            className="w-full sm:w-auto"
+            onClick={handleDownload}
+            disabled={downloading || sharing}
+          >
             {downloading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (

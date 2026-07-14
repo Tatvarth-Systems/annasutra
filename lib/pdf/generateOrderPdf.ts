@@ -439,15 +439,16 @@ const outputPdf = async (
   setTimeout(() => URL.revokeObjectURL(blobUrl), BLOB_REVOKE_DELAY_MS);
 };
 
-/** Generates and downloads an order PDF with client details, items, and letterhead. */
-export const generateOrderPdf = async ({
+type BuildPdfArgs = Omit<GenerateOrderPdfArgs, "iosWindow">;
+
+/** Draws the full order PDF (letterhead, title band, info card, items table, footer) and returns the doc plus its filename. */
+const buildPdfDocument = async ({
   client,
   categoryId,
   items,
   t,
   locale,
-  iosWindow,
-}: GenerateOrderPdfArgs): Promise<void> => {
+}: BuildPdfArgs): Promise<{ doc: PdfDoc; filename: string }> => {
   const { jsPDF } = await import("jspdf");
   const { default: autoTable } = await import("jspdf-autotable");
 
@@ -481,5 +482,23 @@ export const generateOrderPdf = async ({
   drawFooter(doc, locale, t, MARGIN_X, pageWidth);
 
   const filename = buildPdfFilename(client, categoryId, t, locale);
+  return { doc, filename };
+};
+
+/** Generates and downloads an order PDF with client details, items, and letterhead. */
+export const generateOrderPdf = async ({
+  iosWindow,
+  ...args
+}: GenerateOrderPdfArgs): Promise<void> => {
+  const { doc, filename } = await buildPdfDocument(args);
   await outputPdf(doc, filename, iosWindow);
+};
+
+/** Generates an order PDF and hands it to the OS share sheet (e.g. WhatsApp) via the Web Share API. */
+export const shareOrderPdf = async (args: BuildPdfArgs): Promise<void> => {
+  const { doc, filename } = await buildPdfDocument(args);
+  const file = new File([doc.output("blob")], filename, {
+    type: "application/pdf",
+  });
+  await navigator.share({ files: [file] });
 };
