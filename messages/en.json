@@ -28,19 +28,8 @@
     "items": "Items",
     "review": "Review"
   },
-  "auth": {
-    "title": "Sign in",
-    "subtitle": "Sign in to manage your catering orders",
-    "username": "Username",
-    "password": "Password",
-    "signIn": "Sign in",
-    "invalidCredentials": "Incorrect username or password",
-    "signOut": "Sign out",
-    "showPassword": "Show password",
-    "hidePassword": "Hide password"
-  },
   "welcome": {
-    "greeting": "Welcome, {name}",
+    "greeting": "Welcome",
     "subtitle": "Ready to put together a food order sheet?",
     "createOrder": "Create order"
   },

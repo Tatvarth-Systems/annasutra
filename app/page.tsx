@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
-/** Root page redirects to signin. */
+/** Root page redirects to welcome. */
 const Page = () => {
-  redirect("/signin");
+  redirect("/welcome");
 };
 
 export default Page;

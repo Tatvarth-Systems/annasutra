@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/config";
 import type { TFunction } from "@/lib/i18n/provider";
 import type { ClientDetails, OrderItem } from "@/lib/order/types";
 
-import { BUSINESS, BUSINESS_PHONES } from "@/config/business";
+import { BUSINESS } from "@/config/business";
 import { CUSTOM_ITEM_ID } from "@/data/catalog";
 import { toLocaleDigits } from "@/lib/i18n/numerals";
 import { withQty } from "@/lib/order/visibleItems";
@@ -123,30 +123,7 @@ const drawLetterhead = (
   let y = cursorY;
 
   drawText(doc, locale, business.name, marginX, y, 18, "bold", BRAND_RGB);
-  y += 16;
-
-  drawText(
-    doc,
-    locale,
-    `${business.proprietor} · ${business.address}`,
-    marginX,
-    y,
-    9,
-    "normal",
-    MUTED_RGB,
-  );
-  y += 13;
-  drawText(
-    doc,
-    locale,
-    toLocaleDigits(BUSINESS_PHONES.join(" / "), locale),
-    marginX,
-    y,
-    9,
-    "normal",
-    MUTED_RGB,
-  );
-  y += 18;
+  y += 24;
 
   doc.setDrawColor(...LINE_RGB);
   doc.line(marginX, y, pageWidth - marginX, y);
