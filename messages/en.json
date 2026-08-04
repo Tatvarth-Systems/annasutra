@@ -28,21 +28,26 @@
     "items": "Items",
     "review": "Review"
   },
-  "auth": {
-    "title": "Sign in",
-    "subtitle": "Sign in to manage your catering orders",
-    "username": "Username",
-    "password": "Password",
-    "signIn": "Sign in",
-    "invalidCredentials": "Incorrect username or password",
-    "signOut": "Sign out",
-    "showPassword": "Show password",
-    "hidePassword": "Hide password"
-  },
   "welcome": {
-    "greeting": "Welcome, {name}",
+    "greeting": "Welcome",
     "subtitle": "Ready to put together a food order sheet?",
     "createOrder": "Create order"
+  },
+  "landing": {
+    "headline": "Catering order sheets, made simple",
+    "subhead": "AnnaSutra helps catering businesses build itemized food, grocery, and rental order sheets and share them as PDFs in seconds.",
+    "cta": "Create an order",
+    "feature1Title": "Itemized order sheets",
+    "feature1Desc": "Add vegetables, dairy, spices, disposables, and more with quantities and units built in.",
+    "feature2Title": "PDF & WhatsApp sharing",
+    "feature2Desc": "Generate a clean order-sheet PDF and share it straight to WhatsApp or download it.",
+    "feature3Title": "English & Marathi",
+    "feature3Desc": "Switch languages anytime — the whole app, including the PDF, adapts instantly.",
+    "feature4Title": "9 ready-made categories",
+    "feature4Desc": "From vegetables to rental equipment, categories and units are pre-configured so you can start ordering right away.",
+    "categoriesTitle": "All your categories, ready to go",
+    "ctaBandTitle": "Ready to build your first order sheet?",
+    "ctaBandSubtitle": "No sign-up required — just start."
   },
   "client": {
     "title": "Client & event details",

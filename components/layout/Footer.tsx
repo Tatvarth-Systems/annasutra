@@ -5,9 +5,9 @@ import { Code2 } from "lucide-react";
 import { useT } from "@/lib/i18n/provider";
 
 const VENDOR_NAME = "Tatvarth Systems LLP";
-const VENDOR_URL = "https://www.tatvarthsystems.com";
-const TERMS_URL = "https://www.tatvarthsystems.com/terms";
-const PRIVACY_URL = "https://www.tatvarthsystems.com/privacy";
+const VENDOR_URL = "https://tatvarthsystems.com";
+const TERMS_URL = "https://tatvarthsystems.com/terms";
+const PRIVACY_URL = "https://tatvarthsystems.com/privacy";
 
 /** Site footer with vendor branding and legal links. */
 export const Footer = () => {

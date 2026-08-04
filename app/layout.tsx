@@ -20,10 +20,32 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const DESCRIPTION =
+  "AnnaSutra is a digital order-management platform for catering businesses — build itemized food, grocery, and rental order sheets and share them as PDFs in seconds.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "AnnaSutra",
-  description: "Digital Platform for Catering Services",
+  title: {
+    default: "AnnaSutra — Digital Platform for Catering Services",
+    template: "%s · AnnaSutra",
+  },
+  description: DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "AnnaSutra — Digital Platform for Catering Services",
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: "AnnaSutra",
+    type: "website",
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AnnaSutra — Digital Platform for Catering Services",
+    description: DESCRIPTION,
+  },
 };
 
 /** Root layout with locale provider and font configuration. */
