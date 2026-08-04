@@ -1,38 +1,19 @@
-"use client";
-
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { usePathname } from "next/navigation";
 
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
-import { ToastProvider } from "@/components/ui/Toast";
-import { useT } from "@/lib/i18n/provider";
+import { OrderShell } from "@/app/(app)/order/OrderShell";
 
-const STEP_KEYS = ["client", "category", "items", "review"] as const;
+export const metadata: Metadata = {
+  title: "Create Order · AnnaSutra",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
-/** Order flow layout with breadcrumb navigation and toast provider. */
+/** Order flow layout wrapping the shared breadcrumb/toast shell. */
 const OrderLayout = ({ children }: { children: ReactNode }) => {
-  const pathname = usePathname();
-  const t = useT();
-
-  const currentIndex = Math.max(
-    0,
-    STEP_KEYS.findIndex((key) => pathname.includes(`/order/${key}`)),
-  );
-
-  const crumbs = STEP_KEYS.slice(0, currentIndex + 1).map((key, index) => ({
-    key,
-    label: t(`orderSteps.${key}`),
-    href: index === currentIndex ? undefined : `/order/${key}`,
-  }));
-
-  return (
-    <ToastProvider>
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
-        <Breadcrumb items={crumbs} />
-        {children}
-      </main>
-    </ToastProvider>
-  );
+  return <OrderShell>{children}</OrderShell>;
 };
 
 export default OrderLayout;

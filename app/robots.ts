@@ -2,12 +2,13 @@ import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/config/site";
 
-/** Disallows all crawling — the app is fully auth-gated with no public content to index. */
+/** Allows crawling of public content, excluding the stateful order-creation flow. */
 const robots = (): MetadataRoute.Robots => {
   return {
     rules: {
       userAgent: "*",
-      disallow: "/",
+      allow: "/",
+      disallow: "/order",
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
