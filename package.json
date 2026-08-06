@@ -6,18 +6,16 @@
   "scripts": {
     "build": "next build",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "predeploy": "opennextjs-cloudflare build",
-    "deploy": "opennextjs-cloudflare deploy",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "dev": "next dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint",
     "prepare": "husky",
-    "prepreview": "opennextjs-cloudflare build",
-    "preview": "opennextjs-cloudflare preview",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "start": "next start",
-    "preupload": "opennextjs-cloudflare build",
-    "upload": "opennextjs-cloudflare upload"
+    "typecheck": "pnpm cf-typegen && tsc --noEmit",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs}": [
@@ -56,5 +54,6 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.110.0"
-  }
+  },
+  "packageManager": "pnpm@10.28.2"
 }
