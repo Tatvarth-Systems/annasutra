@@ -21,6 +21,13 @@
     // see https://opennext.js.org/cloudflare/howtos/image
     "binding": "IMAGES",
   },
+  "r2_buckets": [
+    {
+      // ISR/data cache persistence, see https://opennext.js.org/cloudflare/caching
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "annasutra-cache",
+    },
+  ],
   "observability": {
     "enabled": true,
     "logs": {
